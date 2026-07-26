@@ -1,4 +1,4 @@
-from database.connection import get_connection
+from CRUDS.connection import get_connection
 
 class Cliente:
     @staticmethod
@@ -52,7 +52,7 @@ class Cliente:
             conn.close()
 
     @staticmethod
-    def buscar_clientes_por_cpf(cpf):
+    def buscar_cliente_por_cpf(cpf):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
@@ -77,7 +77,7 @@ class Cliente:
             conn.close()
 
     @staticmethod
-    def criar(nome_cliente, telefone, cpf, email):
+    def cadastrar_cliente(nome_cliente, telefone, cpf, email):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
@@ -100,7 +100,7 @@ class Cliente:
             return False
 
     @staticmethod
-    def atualizar(id_cliente, nome_cliente, telefone, cpf, email):
+    def atualizar_cliente(id_cliente, nome_cliente, telefone, cpf, email):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
@@ -134,7 +134,7 @@ class Cliente:
             return False
 
     @staticmethod
-    def deletar(id_cliente):
+    def deletar_cliente(id_cliente):
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 

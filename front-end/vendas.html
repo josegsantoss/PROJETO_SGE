@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Vendas · Gestão Inteligente</title>
+    
+    <!-- Font Awesome 6 (Free CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendas.css">
+
+</head>
+<body>
+
+    <!-- Menu Trigger -->
+    <div class="menu-trigger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Menu Lateral -->
+    <div class="side-menu">
+        <div class="menu-header">
+            <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3>Olá, <span id="nomeUsuarioMenu">Usuário</span></h3>
+            <p><i class="fas fa-envelope"></i> <span id="emailUsuarioMenu">empresa@gmail.com</span></p>
+        </div>
+        <div class="menu-items">
+             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='menu.html'">
+                <i class="fa fa-home" aria-hidden="true"></i><span>Inicio</span>
+            </a>
+
+            <!-- Botão para Cadastro de Clientes -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrocliente.html'">
+                <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
+            </a>
+            
+            <!-- Botão para Cadastro de Funcionários -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrofuncionario.html'">
+                <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
+            </a>
+            
+            <!-- Botão para Cadastro de Produtos (NOVO) -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastroprodutos.html'">
+                <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+            
+            <!-- Botão para Extrato -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='extrato.html'">
+                <i class="fas fa-file-invoice"></i><span>Extrato</span>
+            </a>
+
+            <!-- Botão para Orçamento -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='orçamento.html'">
+                <i class="fas fa-calculator"></i><span>Orçamento</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <!-- Botão para Configuração -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='configuração.html'">
+                <i class="fas fa-cog"></i><span>Configuração</span>
+            </a>
+            
+            <!-- Botão para Suporte -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='suporte.html'">
+                <i class="fas fa-headset"></i><span>Suporte</span>
+            </a>
+            
+            <!-- Botão para Sair (com confirmação) -->
+            <a class="menu-item" href="javascript:void(0)" onclick="if(confirm('Tem certeza que deseja sair?')) window.location.href='login.html'">
+                <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+
+        <!-- TÍTULO -->
+        <div class="card grid-full" style="background: linear-gradient(135deg, #1e4f8a 0%, #0c2b4f 100%); color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <i class="fas fa-cash-register" style="font-size: 2rem; color: rgba(255,255,255,0.8);"></i>
+                    <div>
+                        <h1 style="font-size: 1.8rem; font-weight: 700;">Vendas</h1>
+                        <span style="opacity: 0.8; font-size: 0.9rem;"><i class="fas fa-clock"></i> <span id="dataAtual"></span></span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <span style="background: rgba(255,255,255,0.15); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem;">
+                        <i class="fas fa-user"></i> <span id="nomeUsuarioTopo">Carregando...</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID DE VENDAS -->
+        <div class="grid-full">
+            <div class="vendas-grid">
+                <!-- COLUNA ESQUERDA: PRODUTOS -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-box"></i>
+                            <h2>Produtos</h2>
+                            <span class="badge-count" id="totalProdutos">0 produtos</span>
+                        </div>
+
+                        <!-- BARRA DE PESQUISA POR CÓDIGO - NOVA -->
+                        <div class="search-area" style="background: #f0f7ff; padding: 12px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #dbeafe;">
+                            <div class="input-group" style="flex: 1;">
+                                <label><i class="fas fa-barcode"></i> Código do Produto</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="buscaCodigo" placeholder="Digite o código (ex: 001)" style="flex: 1;" onkeyup="buscarPorCodigo(event)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <button class="btn btn-primary btn-sm" onclick="buscarPorCodigoClick()" style="padding: 8px 16px;">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                    <button class="btn btn-outline btn-sm" onclick="limparBuscaCodigo()" style="padding: 8px 16px;">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BARRA DE PESQUISA POR NOME E FILTRO -->
+                        <div class="search-area">
+                            <div class="input-group">
+                                <label>🔍 Buscar produto</label>
+                                <input type="text" id="buscaProduto" placeholder="Nome..." onkeyup="filtrarProdutos()">
+                            </div>
+                            <div class="input-group" style="flex: 0.6;">
+                                <label>Filtrar</label>
+                                <select id="filtroCategoria" onchange="filtrarProdutos()">
+                                    <option value="all">Todas</option>
+                                    <option value="Periféricos">Periféricos</option>
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Componentes">Componentes</option>
+                                    <option value="Acessórios">Acessórios</option>
+                                    <option value="Armazenamento">Armazenamento</option>
+                                    <option value="Áudio">Áudio</option>
+                                    <option value="Redes">Redes</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="produtos-grid" id="produtosGrid">
+                            <!-- Produtos via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUNA DIREITA: CARRINHO -->
+                <div>
+                    <div class="card" style="height: 100%; display: flex; flex-direction: column;">
+                        <div class="card-header">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h2>Carrinho</h2>
+                            <span class="badge-count" id="totalItensCarrinho">0 itens</span>
+                        </div>
+
+                        <div class="carrinho-area">
+                            <div class="carrinho-items" id="carrinhoItems">
+                                <div class="carrinho-vazio">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <p>Carrinho vazio</p>
+                                    <span style="font-size: 11px;">Clique nos produtos para adicionar</span>
+                                </div>
+                            </div>
+
+                            <div class="carrinho-resumo">
+                                <div class="item-resumo">
+                                    <div class="label">Itens</div>
+                                    <div class="valor" id="resumoItens">0</div>
+                                </div>
+                                <div class="item-resumo">
+                                    <div class="label">Subtotal</div>
+                                    <div class="valor" id="resumoSubtotal">R$ 0,00</div>
+                                </div>
+                                <div class="item-resumo">
+                                    <div class="label">Total</div>
+                                    <div class="valor total" id="resumoTotal">R$ 0,00</div>
+                                </div>
+                            </div>
+
+                            <!-- DADOS DO CLIENTE - MAIS CAMPOS -->
+                            <div class="cliente-area">
+                                <div class="input-group">
+                                    <label>Nome do Cliente *</label>
+                                    <input type="text" id="clienteNome" placeholder="Nome completo" list="clientesList">
+                                </div>
+                                <div class="input-group">
+                                    <label>CPF / CNPJ *</label>
+                                    <input type="text" id="clienteDocumento" placeholder="000.000.000-00">
+                                </div>
+                                <div class="input-group">
+                                    <label>Telefone</label>
+                                    <input type="text" id="clienteTelefone" placeholder="(81) 99999-9999">
+                                </div>
+                                <div class="input-group">
+                                    <label>E-mail</label>
+                                    <input type="email" id="clienteEmail" placeholder="cliente@email.com">
+                                </div>
+                                <div class="input-group input-group-full">
+                                    <label>Endereço</label>
+                                    <input type="text" id="clienteEndereco" placeholder="Rua, número, bairro, cidade">
+                                </div>
+                                <div class="input-group">
+                                    <label>Desconto (%)</label>
+                                    <input type="number" id="desconto" value="0" min="0" max="100" oninput="calcularTotal()">
+                                </div>
+                                <div class="input-group">
+                                    <label>Forma de Pagamento</label>
+                                    <select id="formaPagamento">
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Cartão Crédito">Cartão Crédito</option>
+                                        <option value="Cartão Débito">Cartão Débito</option>
+                                        <option value="PIX">PIX</option>
+                                        <option value="Boleto">Boleto</option>
+                                        <option value="Transferência">Transferência</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <datalist id="clientesList"></datalist>
+
+                            <div class="acoes-venda">
+                                <button class="btn btn-outline btn-sm" onclick="limparCarrinho()">
+                                    <i class="fas fa-trash-alt"></i> Limpar
+                                </button>
+                                <button class="btn btn-success" onclick="finalizarVenda()">
+                                    <i class="fas fa-check"></i> Finalizar Venda
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTÓRICO DE VENDAS -->
+        <div class="grid-full">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-history"></i>
+                    <h2>Histórico de Vendas</h2>
+                    <div class="filtro-data">
+                        <input type="date" id="dataInicio">
+                        <input type="date" id="dataFim">
+                        <button class="btn-history" onclick="carregarHistorico()">
+                            <i class="fas fa-search"></i> Filtrar
+                        </button>
+                    </div>
+                </div>
+                <div class="historico-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Itens</th>
+                                <th style="text-align: right;">Valor</th>
+                                <th style="text-align: center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historicoBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 30px; color: #94a3b8;">
+                                    <i class="fas fa-info-circle"></i> Nenhuma venda registrada
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==================== PRODUTOS DE INFORMÁTICA ====================
+        const produtosInformatica = [
+            // Periféricos
+            { id: 1, codigo: "001", nome: "Mouse Gamer RGB", categoria: "Periféricos", preco: 89.90, icone: "fa-mouse" },
+            { id: 2, codigo: "002", nome: "Teclado Mecânico RGB", categoria: "Periféricos", preco: 199.90, icone: "fa-keyboard" },
+            { id: 3, codigo: "003", nome: "Mousepad Gamer", categoria: "Periféricos", preco: 39.90, icone: "fa-rug" },
+            { id: 4, codigo: "004", nome: "Headset Gamer 7.1", categoria: "Periféricos", preco: 159.90, icone: "fa-headphones" },
+            { id: 5, codigo: "005", nome: "Monitor LED 24''", categoria: "Periféricos", preco: 799.90, icone: "fa-tv" },
+            { id: 6, codigo: "006", nome: "Monitor Gamer 27'' 144Hz", categoria: "Periféricos", preco: 1499.90, icone: "fa-tv" },
+            { id: 7, codigo: "007", nome: "Webcam Full HD", categoria: "Periféricos", preco: 149.90, icone: "fa-camera" },
+            { id: 8, codigo: "008", nome: "Suporte para Monitor", categoria: "Periféricos", preco: 89.90, icone: "fa-arrow-up" },
+            // Hardware
+            { id: 9, codigo: "009", nome: "CPU Intel Core i5", categoria: "Hardware", preco: 1299.90, icone: "fa-microchip" },
+            { id: 10, codigo: "010", nome: "CPU Intel Core i7", categoria: "Hardware", preco: 2199.90, icone: "fa-microchip" },
+            { id: 11, codigo: "011", nome: "CPU AMD Ryzen 5", categoria: "Hardware", preco: 1399.90, icone: "fa-microchip" },
+            { id: 12, codigo: "012", nome: "CPU AMD Ryzen 7", categoria: "Hardware", preco: 2299.90, icone: "fa-microchip" },
+            { id: 13, codigo: "013", nome: "Placa-mãe ATX", categoria: "Hardware", preco: 599.90, icone: "fa-plug" },
+            { id: 14, codigo: "014", nome: "Placa-mãe Micro-ATX", categoria: "Hardware", preco: 449.90, icone: "fa-plug" },
+            { id: 15, codigo: "015", nome: "Fonte 650W 80 Plus", categoria: "Hardware", preco: 399.90, icone: "fa-bolt" },
+            { id: 16, codigo: "016", nome: "Fonte 850W 80 Gold", categoria: "Hardware", preco: 699.90, icone: "fa-bolt" },
+            { id: 17, codigo: "017", nome: "Gabinete Gamer ATX", categoria: "Hardware", preco: 349.90, icone: "fa-server" },
+            // Componentes
+            { id: 18, codigo: "018", nome: "Memória RAM 8GB DDR4", categoria: "Componentes", preco: 199.90, icone: "fa-memory" },
+            { id: 19, codigo: "019", nome: "Memória RAM 16GB DDR4", categoria: "Componentes", preco: 349.90, icone: "fa-memory" },
+            { id: 20, codigo: "020", nome: "Memória RAM 32GB DDR4", categoria: "Componentes", preco: 649.90, icone: "fa-memory" },
+            { id: 21, codigo: "021", nome: "Placa de Vídeo GTX 1650", categoria: "Componentes", preco: 899.90, icone: "fa-object-group" },
+            { id: 22, codigo: "022", nome: "Placa de Vídeo RTX 3060", categoria: "Componentes", preco: 2199.90, icone: "fa-object-group" },
+            { id: 23, codigo: "023", nome: "Placa de Vídeo RTX 4070", categoria: "Componentes", preco: 3999.90, icone: "fa-object-group" },
+            { id: 24, codigo: "024", nome: "Cooler CPU", categoria: "Componentes", preco: 89.90, icone: "fa-fan" },
+            { id: 25, codigo: "025", nome: "Water Cooler 240mm", categoria: "Componentes", preco: 299.90, icone: "fa-fan" },
+            // Armazenamento
+            { id: 26, codigo: "026", nome: "SSD 240GB", categoria: "Armazenamento", preco: 179.90, icone: "fa-hdd" },
+            { id: 27, codigo: "027", nome: "SSD 480GB", categoria: "Armazenamento", preco: 299.90, icone: "fa-hdd" },
+            { id: 28, codigo: "028", nome: "SSD 1TB NVMe", categoria: "Armazenamento", preco: 549.90, icone: "fa-hdd" },
+            { id: 29, codigo: "029", nome: "HD 1TB", categoria: "Armazenamento", preco: 299.90, icone: "fa-hdd" },
+            { id: 30, codigo: "030", nome: "HD 2TB", categoria: "Armazenamento", preco: 449.90, icone: "fa-hdd" },
+            { id: 31, codigo: "031", nome: "Pen Drive 32GB", categoria: "Armazenamento", preco: 39.90, icone: "fa-usb" },
+            { id: 32, codigo: "032", nome: "Pen Drive 64GB", categoria: "Armazenamento", preco: 59.90, icone: "fa-usb" },
+            // Áudio
+            { id: 33, codigo: "033", nome: "Caixa de Som Bluetooth", categoria: "Áudio", preco: 149.90, icone: "fa-volume-up" },
+            { id: 34, codigo: "034", nome: "Microfone Condensador", categoria: "Áudio", preco: 199.90, icone: "fa-microphone" },
+            { id: 35, codigo: "035", nome: "Fone de Ouvido Estéreo", categoria: "Áudio", preco: 79.90, icone: "fa-headphones" },
+            // Redes
+            { id: 36, codigo: "036", nome: "Roteador Wi-Fi 6", categoria: "Redes", preco: 299.90, icone: "fa-wifi" },
+            { id: 37, codigo: "037", nome: "Switch 8 Portas", categoria: "Redes", preco: 179.90, icone: "fa-network-wired" },
+            { id: 38, codigo: "038", nome: "Cabo de Rede 5m", categoria: "Redes", preco: 19.90, icone: "fa-ethernet" },
+            { id: 39, codigo: "039", nome: "Placa de Rede Wi-Fi", categoria: "Redes", preco: 89.90, icone: "fa-wifi" },
+            // Acessórios
+            { id: 40, codigo: "040", nome: "Hub USB 3.0", categoria: "Acessórios", preco: 79.90, icone: "fa-usb" },
+            { id: 41, codigo: "041", nome: "Suporte para Notebook", categoria: "Acessórios", preco: 69.90, icone: "fa-laptop" },
+            { id: 42, codigo: "042", nome: "Kit Limpeza", categoria: "Acessórios", preco: 29.90, icone: "fa-spray-can" },
+            { id: 43, codigo: "043", nome: "Filtro de Linha", categoria: "Acessórios", preco: 49.90, icone: "fa-plug" }
+        ];
+
+        // ==================== VARIÁVEIS GLOBAIS ====================
+        let produtos = [];
+        let carrinho = [];
+        let clientes = [];
+        let historicoVendas = [];
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            const hoje = new Date();
+            document.getElementById('dataAtual').textContent = hoje.toLocaleDateString('pt-BR', { 
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+            
+            const dataStr = hoje.toISOString().split('T')[0];
+            document.getElementById('dataInicio').value = dataStr;
+            document.getElementById('dataFim').value = dataStr;
+
+            produtos = produtosInformatica;
+            document.getElementById('totalProdutos').textContent = produtos.length + ' produtos';
+            renderizarProdutos();
+
+            carregarClientes();
+            carregarHistorico();
+            carregarUsuario();
+
+            // Adicionar evento de Enter na busca por código
+            document.getElementById('buscaCodigo').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    buscarPorCodigoClick();
+                }
+            });
+        });
+
+        // ==================== CARREGAR USUÁRIO ====================
+        async function carregarUsuario() {
+            try {
+                const response = await fetch('/api/dashboard');
+                if (response.ok) {
+                    const data = await response.json();
+                    const nome = data.usuario_email || 'Usuário';
+                    document.getElementById('nomeUsuarioMenu').textContent = nome;
+                    document.getElementById('nomeUsuarioTopo').textContent = nome;
+                    document.getElementById('emailUsuarioMenu').textContent = data.usuario_email || '';
+                } else if (response.status === 401) {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Erro ao carregar usuário:', error);
+            }
+        }
+
+        // ==================== CARREGAR CLIENTES ====================
+        async function carregarClientes() {
+            try {
+                const response = await fetch('/api/clientes');
+                if (response.ok) {
+                    clientes = await response.json();
+                    const datalist = document.getElementById('clientesList');
+                    datalist.innerHTML = '';
+                    clientes.forEach(cliente => {
+                        const option = document.createElement('option');
+                        option.value = cliente.nome_cliente;
+                        datalist.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
+        }
+
+        // ==================== RENDERIZAR PRODUTOS ====================
+        function renderizarProdutos() {
+            const grid = document.getElementById('produtosGrid');
+            grid.innerHTML = '';
+
+            const termo = document.getElementById('buscaProduto').value.toLowerCase();
+            const categoria = document.getElementById('filtroCategoria').value;
+
+            const filtrados = produtos.filter(p => {
+                const matchNome = p.nome.toLowerCase().includes(termo);
+                const matchCategoria = categoria === 'all' || p.categoria === categoria;
+                return matchNome && matchCategoria;
+            });
+
+            if (filtrados.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: #94a3b8;">
+                        <i class="fas fa-search" style="font-size: 28px; display: block; margin-bottom: 8px;"></i>
+                        Nenhum produto encontrado
+                    </div>
+                `;
+                return;
+            }
+
+            filtrados.forEach(produto => {
+                const card = document.createElement('div');
+                card.className = 'produto-card';
+                card.onclick = () => adicionarAoCarrinho(produto);
+
+                const qtdNoCarrinho = carrinho.filter(item => item.id === produto.id)
+                                              .reduce((sum, item) => sum + item.quantidade, 0);
+
+                const corIcone = produto.categoria === 'Periféricos' ? '#3b82f6' :
+                                 produto.categoria === 'Hardware' ? '#8b5cf6' :
+                                 produto.categoria === 'Componentes' ? '#f59e0b' :
+                                 produto.categoria === 'Armazenamento' ? '#10b981' :
+                                 produto.categoria === 'Áudio' ? '#ec4899' :
+                                 produto.categoria === 'Redes' ? '#06b6d4' : '#64748b';
+
+                card.innerHTML = `
+                    <div class="icone" style="color: ${corIcone};"><i class="fas ${produto.icone}"></i></div>
+                    <div style="font-size: 10px; color: #94a3b8; font-weight: 600; background: #f1f5f9; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 4px;">
+                        #${produto.codigo}
+                    </div>
+                    <div class="nome">${produto.nome}</div>
+                    <div class="preco">R$ ${produto.preco.toFixed(2)}</div>
+                    <span class="categoria-badge">${produto.categoria}</span>
+                    ${qtdNoCarrinho > 0 ? `<div class="qtd-badge">${qtdNoCarrinho}</div>` : ''}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ==================== BUSCA POR CÓDIGO ====================
+        function buscarPorCodigo(event) {
+            if (event && event.key === 'Enter') {
+                buscarPorCodigoClick();
+            }
+        }
+
+        function buscarPorCodigoClick() {
+            const codigo = document.getElementById('buscaCodigo').value.trim();
+            if (!codigo) {
+                mostrarNotificacao('Digite um código para buscar', 'info');
+                return;
+            }
+
+            const produto = produtos.find(p => p.codigo === codigo);
+            if (produto) {
+                // Limpa a busca por nome e categoria
+                document.getElementById('buscaProduto').value = '';
+                document.getElementById('filtroCategoria').value = 'all';
+                
+                // Adiciona o produto ao carrinho
+                adicionarAoCarrinho(produto);
+                
+                // Mostra notificação de sucesso
+                mostrarNotificacao(`✅ Produto #${codigo} encontrado e adicionado!`, 'success');
+                
+                // Limpa o campo de código
+                document.getElementById('buscaCodigo').value = '';
+            } else {
+                mostrarNotificacao(`❌ Produto com código #${codigo} não encontrado`, 'error');
+            }
+        }
+
+        function limparBuscaCodigo() {
+            document.getElementById('buscaCodigo').value = '';
+            document.getElementById('buscaCodigo').focus();
+            mostrarNotificacao('Busca por código limpa', 'info');
+        }
+
+        function filtrarProdutos() {
+            renderizarProdutos();
+        }
+
+        // ==================== CARRINHO ====================
+        function adicionarAoCarrinho(produto) {
+            const existente = carrinho.find(item => item.id === produto.id);
+            if (existente) {
+                existente.quantidade += 1;
+            } else {
+                carrinho.push({
+                    id: produto.id,
+                    codigo: produto.codigo,
+                    nome: produto.nome,
+                    preco: produto.preco,
+                    quantidade: 1
+                });
+            }
+            atualizarCarrinho();
+            renderizarProdutos();
+            mostrarNotificacao(`${produto.nome} adicionado!`, 'success');
+        }
+
+        function removerDoCarrinho(id) {
+            const index = carrinho.findIndex(item => item.id === id);
+            if (index !== -1) {
+                carrinho.splice(index, 1);
+                atualizarCarrinho();
+                renderizarProdutos();
+                mostrarNotificacao('Item removido', 'info');
+            }
+        }
+
+        function alterarQuantidade(id, delta) {
+            const item = carrinho.find(i => i.id === id);
+            if (item) {
+                item.quantidade += delta;
+                if (item.quantidade <= 0) {
+                    removerDoCarrinho(id);
+                    return;
+                }
+                atualizarCarrinho();
+                renderizarProdutos();
+            }
+        }
+
+        function atualizarCarrinho() {
+            const container = document.getElementById('carrinhoItems');
+            const totalItens = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+            document.getElementById('totalItensCarrinho').textContent = totalItens + ' itens';
+
+            if (carrinho.length === 0) {
+                container.innerHTML = `
+                    <div class="carrinho-vazio">
+                        <i class="fas fa-shopping-bag"></i>
+                        <p>Carrinho vazio</p>
+                        <span style="font-size: 11px;">Clique nos produtos para adicionar</span>
+                    </div>
+                `;
+                document.getElementById('resumoItens').textContent = '0';
+                document.getElementById('resumoSubtotal').textContent = 'R$ 0,00';
+                document.getElementById('resumoTotal').textContent = 'R$ 0,00';
+                return;
+            }
+
+            let html = '';
+            let subtotal = 0;
+
+            carrinho.forEach(item => {
+                const totalItem = item.preco * item.quantidade;
+                subtotal += totalItem;
+                html += `
+                    <div class="carrinho-item">
+                        <div class="info">
+                            <div class="nome">${item.nome}</div>
+                            <div class="detalhe">#${item.codigo} · R$ ${item.preco.toFixed(2)} und.</div>
+                        </div>
+                        <div class="acoes">
+                            <div class="qtd-control">
+                                <button onclick="alterarQuantidade(${item.id}, -1)">-</button>
+                                <span>${item.quantidade}</span>
+                                <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+                            </div>
+                            <span class="preco-item">R$ ${totalItem.toFixed(2)}</span>
+                            <button class="btn-remover" onclick="removerDoCarrinho(${item.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('resumoItens').textContent = totalItens;
+            document.getElementById('resumoSubtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+            calcularTotal();
+        }
+
+        function calcularTotal() {
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+            const valorDesconto = (subtotal * desconto) / 100;
+            const total = subtotal - valorDesconto;
+
+            document.getElementById('resumoTotal').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        function limparCarrinho() {
+            if (carrinho.length === 0) return;
+            if (!confirm('Tem certeza que deseja limpar o carrinho?')) return;
+            carrinho = [];
+            atualizarCarrinho();
+            renderizarProdutos();
+            mostrarNotificacao('Carrinho limpo', 'info');
+        }
+
+        // ==================== FINALIZAR VENDA ====================
+        async function finalizarVenda() {
+            if (carrinho.length === 0) {
+                mostrarNotificacao('Carrinho vazio! Adicione produtos.', 'error');
+                return;
+            }
+
+            const clienteNome = document.getElementById('clienteNome').value.trim();
+            const clienteDocumento = document.getElementById('clienteDocumento').value.trim();
+            const clienteTelefone = document.getElementById('clienteTelefone').value.trim();
+            const clienteEmail = document.getElementById('clienteEmail').value.trim();
+            const clienteEndereco = document.getElementById('clienteEndereco').value.trim();
+
+            if (!clienteNome || !clienteDocumento) {
+                mostrarNotificacao('Nome e CPF/CNPJ são obrigatórios!', 'error');
+                return;
+            }
+
+            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+            const formaPagamento = document.getElementById('formaPagamento').value;
+
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const valorDesconto = (subtotal * desconto) / 100;
+            const total = subtotal - valorDesconto;
+
+            const dadosVenda = {
+                itens: carrinho.map(item => ({
+                    id_produto: item.id,
+                    codigo: item.codigo,
+                    quantidade: item.quantidade,
+                    preco: item.preco,
+                    nome: item.nome
+                })),
+                cliente_nome: clienteNome,
+                cliente_documento: clienteDocumento,
+                cliente_telefone: clienteTelefone,
+                cliente_email: clienteEmail,
+                cliente_endereco: clienteEndereco,
+                desconto: desconto,
+                forma_pagamento: formaPagamento,
+                total: total,
+                subtotal: subtotal
+            };
+
+            try {
+                const response = await fetch('/api/vendas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosVenda)
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok) {
+                    mostrarNotificacao(`✅ Venda #${resultado.id_venda} finalizada! Total: R$ ${total.toFixed(2)}`, 'success');
+                    
+                    // Limpar carrinho
+                    carrinho = [];
+                    atualizarCarrinho();
+                    renderizarProdutos();
+                    
+                    // Limpar campos do cliente
+                    document.getElementById('clienteNome').value = '';
+                    document.getElementById('clienteDocumento').value = '';
+                    document.getElementById('clienteTelefone').value = '';
+                    document.getElementById('clienteEmail').value = '';
+                    document.getElementById('clienteEndereco').value = '';
+                    document.getElementById('desconto').value = '0';
+                    
+                    // Recarregar histórico
+                    carregarHistorico();
+                } else {
+                    mostrarNotificacao(resultado.erro || 'Erro ao finalizar venda', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarNotificacao('Erro ao conectar com o servidor', 'error');
+            }
+        }
+
+        // ==================== CARREGAR HISTÓRICO ====================
+        async function carregarHistorico() {
+            try {
+                const dataInicio = document.getElementById('dataInicio').value;
+                const dataFim = document.getElementById('dataFim').value;
+
+                let url = '/api/vendas';
+                if (dataInicio && dataFim) {
+                    url += `?data_inicio=${dataInicio}&data_fim=${dataFim}`;
+                }
+
+                const response = await fetch(url);
+                if (response.ok) {
+                    historicoVendas = await response.json();
+                    renderizarHistorico();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar histórico:', error);
+            }
+        }
+
+        function renderizarHistorico() {
+            const tbody = document.getElementById('historicoBody');
+            
+            if (!historicoVendas || historicoVendas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 30px; color: #94a3b8;">
+                            <i class="fas fa-info-circle"></i> Nenhuma venda registrada
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            historicoVendas.forEach((venda) => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #f1f5f9';
+                
+                const dataVenda = venda.data_venda ? new Date(venda.data_venda).toLocaleString('pt-BR') : '-';
+                const valorFinal = venda.valor_final ? parseFloat(venda.valor_final).toFixed(2) : '0,00';
+                
+                tr.innerHTML = `
+                    <td style="padding: 8px 10px; font-weight: 600;">#${venda.id_venda || '-'}</td>
+                    <td style="padding: 8px 10px;">${dataVenda}</td>
+                    <td style="padding: 8px 10px;">${venda.cliente_nome || '-'}</td>
+                    <td style="padding: 8px 10px;">${venda.cliente_documento || '-'}</td>
+                    <td style="padding: 8px 10px;">${venda.total_itens || 0}</td>
+                    <td style="padding: 8px 10px; text-align: right; font-weight: 600; color: #059669;">
+                        R$ ${valorFinal}
+                    </td>
+                    <td style="padding: 8px 10px; text-align: center;">
+                        <span class="status-concluido">Concluído</span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ==================== NOTIFICAÇÕES ====================
+        function mostrarNotificacao(mensagem, tipo = 'info') {
+            const notificacao = document.createElement('div');
+            notificacao.className = `notification ${tipo}`;
+            const icones = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+            notificacao.innerHTML = `<i class="fas ${icones[tipo] || icones.info}"></i> ${mensagem}`;
+            document.body.appendChild(notificacao);
+
+            setTimeout(() => {
+                notificacao.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notificacao.remove(), 300);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>

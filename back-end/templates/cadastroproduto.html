@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos · TechManager</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='cadastroproduto.css') }}">
+</head>
+<body>
+
+    <div class="menu-trigger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="side-menu">
+        <div class="menu-header">
+            <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3>Olá, Usuário</h3>
+            <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
+        </div>
+        
+        <div class="menu-items">
+            <a class="menu-item" href="{{ url_for('menu') }}">
+                <i class="fas fa-home"></i><span>Início</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('cadastro') }}">
+                <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
+            </a>
+            
+            {% if session.get('cargo') == 'admin' %}
+            <a class="menu-item" href="{{ url_for('cadastro_funcionario') }}">
+                <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
+            </a>
+            {% endif %}
+            
+            <a class="menu-item" href="{{ url_for('cadastro_produtos') }}">
+                <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('conserto') }}">
+                <i class="fas fa-wrench"></i><span>Conserto</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('vendas') }}">
+                <i class="fas fa-cash-register"></i><span>Vendas</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('extrato') }}">
+                <i class="fas fa-file-invoice"></i><span>Extrato</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('orcamento') }}">
+                <i class="fas fa-calculator"></i><span>Orçamento</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <a class="menu-item" href="{{ url_for('configuracao') }}">
+                <i class="fas fa-cog"></i><span>Configuração</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('suporte') }}">
+                <i class="fas fa-headset"></i><span>Suporte</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
+                <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+            </a>
+         </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="card grid-full">
+            <div class="card-header">
+                <i class="fas fa-box"></i>
+                <h2>Cadastro de Produtos</h2>
+            </div>
+            <div style="font-size: 0.85rem; color: #64748b;">
+                <i class="fas fa-info-circle"></i> Gerencie seu catálogo de produtos, softwares e periféricos
+            </div>
+        </div>
+
+        <div class="card grid-full">
+            <div class="card-header">
+                <i class="fas fa-plus-circle"></i>
+                <h3>Cadastrar Novo Produto</h3>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-barcode"></i> Código</label>
+                    <input type="text" id="produtoCodigo" placeholder="Ex: PROD-001">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-tag"></i> Nome do Produto</label>
+                    <input type="text" id="produtoNome" placeholder="Nome do produto">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-layer-group"></i> Categoria</label>
+                    <select id="produtoCategoria">
+                        <option value="hardware">💻 Hardware</option>
+                        <option value="software">💿 Software</option>
+                        <option value="periferico">🎮 Periférico</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-dollar-sign"></i> Preço (R$)</label>
+                    <input type="number" id="produtoPreco" placeholder="0,00" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-cubes"></i> Estoque</label>
+                    <input type="number" id="produtoEstoque" placeholder="Quantidade" value="0">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-align-left"></i> Descrição</label>
+                    <input type="text" id="produtoDescricao" placeholder="Descrição do produto...">
+                </div>
+            </div>
+
+            <div class="actions-bar">
+                <button id="btnLimparForm" class="outline"><i class="fas fa-eraser"></i> Limpar</button>
+                <button id="btnSalvarProduto" class="success"><i class="fas fa-save"></i> Salvar Produto</button>
+            </div>
+        </div>
+
+        <div class="card grid-full">
+            <div class="card-header">
+                <i class="fas fa-list"></i>
+                <h3>Lista de Produtos</h3>
+            </div>
+
+            <div class="categorias">
+                <button class="categoria-btn active" data-filtro="todos">📌 Todos</button>
+                <button class="categoria-btn" data-filtro="hardware">💻 Hardware</button>
+                <button class="categoria-btn" data-filtro="software">💿 Software</button>
+                <button class="categoria-btn" data-filtro="periferico">🎮 Periférico</button>
+            </div>
+
+            <div class="search-bar">
+                <div class="input-group">
+                    <label><i class="fas fa-search"></i> Buscar produto</label>
+                    <input type="text" id="buscaProduto" placeholder="Nome ou código...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabelaProdutos">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Total Estoque</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabela">
+                        <tr class="empty-row">
+                            <td colspan="7" style="text-align:center; padding:32px;">
+                                <i class="fas fa-box-open"></i> Nenhum produto cadastrado
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== BANCO DE DADOS LOCAL ====================
+        let produtos = [];
+        let editandoId = null;
+        let filtroAtivo = "todos";
+
+        // ==================== FUNÇÕES DE CATEGORIA ====================
+        function getCategoriaClass(categoria) {
+            const classes = {
+                'hardware': 'categoria-hardware',
+                'software': 'categoria-software',
+                'periferico': 'categoria-perifericos'
+            };
+            return classes[categoria] || 'categoria-hardware';
+        }
+
+        function getCategoriaIcone(categoria) {
+            const icones = {
+                'hardware': '💻',
+                'software': '💿',
+                'periferico': '🎮'
+            };
+            return icones[categoria] || '📦';
+        }
+
+        function getCategoriaNome(categoria) {
+            const nomes = {
+                'hardware': 'Hardware',
+                'software': 'Software',
+                'periferico': 'Periférico'
+            };
+            return nomes[categoria] || categoria;
+        }
+
+        // ==================== CARREGAR PRODUTOS DO LOCALSTORAGE ====================
+        function carregarProdutos() {
+            const saved = localStorage.getItem('techProdutos');
+            if (saved) {
+                produtos = JSON.parse(saved);
+            } else {
+                // Produtos de exemplo
+                produtos = [
+                    { id: 1, codigo: "NOTE-001", nome: "Dell Inspiron 15", categoria: "hardware", preco: 3499.90, estoque: 10, descricao: "Notebook Dell Inspiron 15 polegadas" },
+                    { id: 2, codigo: "SOFT-001", nome: "Windows 11 Pro", categoria: "software", preco: 799.90, estoque: 25, descricao: "Licença Windows 11 Professional" },
+                    { id: 3, codigo: "PER-001", nome: "Mouse Gamer RGB", categoria: "periferico", preco: 89.90, estoque: 50, descricao: "Mouse Gamer com iluminação RGB" }
+                ];
+                salvarProdutos();
+            }
+            atualizarTabela();
+        }
+
+        function salvarProdutos() {
+            localStorage.setItem('techProdutos', JSON.stringify(produtos));
+        }
+
+        // ==================== ATUALIZAR TABELA ====================
+        function atualizarTabela() {
+            const tbody = document.getElementById('corpoTabela');
+            const busca = document.getElementById('buscaProduto').value.toLowerCase();
+            let filtrados = produtos;
+
+            // Filtro por categoria
+            if (filtroAtivo !== "todos") {
+                filtrados = filtrados.filter(p => p.categoria === filtroAtivo);
+            }
+
+            // Filtro por busca
+            if (busca) {
+                filtrados = filtrados.filter(p =>
+                    p.codigo.toLowerCase().includes(busca) ||
+                    p.nome.toLowerCase().includes(busca)
+                );
+            }
+
+            if (filtrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:32px;"><i class="fas fa-box-open"></i> Nenhum produto encontrado</td></tr>';
+                return;
+            }
+
+            let html = '';
+            filtrados.forEach(prod => {
+                const totalEstoque = prod.preco * prod.estoque;
+                html += `
+                <tr>
+                    <td><strong>${prod.codigo}</strong></td>
+                    <td>${prod.nome}</td>
+                    <td><span class="categoria-badge ${getCategoriaClass(prod.categoria)}">${getCategoriaIcone(prod.categoria)} ${getCategoriaNome(prod.categoria)}</span></td>
+                    <td>R$ ${prod.preco.toFixed(2)}</td>
+                    <td>${prod.estoque} un</td>
+                    <td>R$ ${totalEstoque.toFixed(2)}</td>
+                    <td>
+                        <button class="action-btn edit" onclick="editarProduto(${prod.id})"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn delete" onclick="excluirProduto(${prod.id})"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // ==================== LIMPAR FORMULÁRIO ====================
+        function limparFormulario() {
+            document.getElementById('produtoCodigo').value = '';
+            document.getElementById('produtoNome').value = '';
+            document.getElementById('produtoCategoria').value = 'hardware';
+            document.getElementById('produtoPreco').value = '';
+            document.getElementById('produtoEstoque').value = '0';
+            document.getElementById('produtoDescricao').value = '';
+            editandoId = null;
+
+            const btnSalvar = document.getElementById('btnSalvarProduto');
+            btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar Produto';
+        }
+
+        // ==================== SALVAR PRODUTO ====================
+        function salvarProduto() {
+            const codigo = document.getElementById('produtoCodigo').value.trim();
+            const nome = document.getElementById('produtoNome').value.trim();
+            const categoria = document.getElementById('produtoCategoria').value;
+            const preco = parseFloat(document.getElementById('produtoPreco').value);
+            const estoque = parseInt(document.getElementById('produtoEstoque').value);
+            const descricao = document.getElementById('produtoDescricao').value.trim();
+
+            if (!codigo) {
+                mostrarNotificacao('Digite o código do produto!', 'error');
+                return;
+            }
+            if (!nome) {
+                mostrarNotificacao('Digite o nome do produto!', 'error');
+                return;
+            }
+            if (isNaN(preco) || preco <= 0) {
+                mostrarNotificacao('Digite um preço válido!', 'error');
+                return;
+            }
+            if (isNaN(estoque) || estoque < 0) {
+                mostrarNotificacao('Digite uma quantidade válida!', 'error');
+                return;
+            }
+
+            if (editandoId) {
+                // Editar produto existente
+                const index = produtos.findIndex(p => p.id === editandoId);
+                if (index !== -1) {
+                    produtos[index] = {
+                        ...produtos[index],
+                        codigo, nome, categoria, preco, estoque, descricao
+                    };
+                    mostrarNotificacao('Produto atualizado com sucesso!', 'success');
+                }
+                editandoId = null;
+                document.getElementById('btnSalvarProduto').innerHTML = '<i class="fas fa-save"></i> Salvar Produto';
+            } else {
+                // Verificar se código já existe
+                if (produtos.some(p => p.codigo === codigo)) {
+                    mostrarNotificacao('Já existe um produto com este código!', 'error');
+                    return;
+                }
+
+                // Novo produto
+                const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
+                produtos.push({
+                    id: novoId,
+                    codigo, nome, categoria, preco, estoque, descricao
+                });
+                mostrarNotificacao('Produto cadastrado com sucesso!', 'success');
+            }
+
+            salvarProdutos();
+            limparFormulario();
+            atualizarTabela();
+        }
+
+        // ==================== EDITAR PRODUTO ====================
+        window.editarProduto = function(id) {
+            const produto = produtos.find(p => p.id === id);
+            if (!produto) return;
+
+            document.getElementById('produtoCodigo').value = produto.codigo;
+            document.getElementById('produtoNome').value = produto.nome;
+            document.getElementById('produtoCategoria').value = produto.categoria;
+            document.getElementById('produtoPreco').value = produto.preco;
+            document.getElementById('produtoEstoque').value = produto.estoque;
+            document.getElementById('produtoDescricao').value = produto.descricao || '';
+
+            editandoId = id;
+            const btnSalvar = document.getElementById('btnSalvarProduto');
+            btnSalvar.innerHTML = '<i class="fas fa-pen"></i> Atualizar Produto';
+
+            // Rolar para o formulário
+            document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+            mostrarNotificacao('Editando produto: ' + produto.nome, 'info');
+        }
+
+        // ==================== EXCLUIR PRODUTO ====================
+        window.excluirProduto = function(id) {
+            if (confirm('⚠️ Tem certeza que deseja excluir este produto?')) {
+                const produto = produtos.find(p => p.id === id);
+                produtos = produtos.filter(p => p.id !== id);
+                salvarProdutos();
+                atualizarTabela();
+
+                if (editandoId === id) {
+                    limparFormulario();
+                }
+                mostrarNotificacao(`Produto "${produto.nome}" excluído!`, 'success');
+            }
+        }
+
+        // ==================== NOTIFICAÇÕES ====================
+        function mostrarNotificacao(mensagem, tipo) {
+            const notificacao = document.createElement('div');
+            const cor = tipo === 'success' ? '#10b981' : tipo === 'error' ? '#ef4444' : '#3b82f6';
+            const icone = tipo === 'success' ? 'fa-check-circle' : (tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+
+            notificacao.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${cor};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 500;
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+            notificacao.innerHTML = `<i class="fas ${icone}"></i> ${mensagem}`;
+            document.body.appendChild(notificacao);
+
+            setTimeout(() => {
+                notificacao.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notificacao.remove(), 300);
+            }, 2500);
+        }
+
+        // ==================== EVENTOS ====================
+        document.getElementById('btnSalvarProduto').addEventListener('click', salvarProduto);
+        document.getElementById('btnLimparForm').addEventListener('click', limparFormulario);
+        document.getElementById('buscaProduto').addEventListener('input', () => atualizarTabela());
+
+        // Filtros por categoria
+        document.querySelectorAll('.categoria-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filtroAtivo = btn.dataset.filtro;
+                atualizarTabela();
+            });
+        });
+
+        // Inicializar
+        carregarProdutos();
+    </script>
+</body>
+</html>

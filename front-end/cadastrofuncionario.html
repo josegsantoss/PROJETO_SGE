@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finança Pro · Cadastro de Funcionário</title>
+  <link rel="shortcut icon" href="imagens/logo.png" type="image/x-icon">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <link rel="stylesheet" href="cadastrofuncionario.css">
+</head>
+<body>
+  <div class="cadastro-box">
+    <div class="header-cadastro">
+      <i class="fas fa-users"></i>
+      <h1>Cadastro de Funcionário</h1>
+      <div class="subtitle">
+        <span class="badge-func"><i class="fas fa-id-card"></i> RH · Novo colaborador</span>
+      </div>
+    </div>
+
+    <form id="cadastroFuncionarioForm" onsubmit="return false;">
+      <div class="form-grid">
+        <!-- Nome completo -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-user"></i> Nome completo</label>
+          <input type="text" id="nomeFuncionario" placeholder="Ex: Ana Carolina Mendes" autocomplete="name">
+        </div>
+
+        <!-- Cargo -->
+        <div class="form-group">
+          <label><i class="fas fa-briefcase"></i> Cargo</label>
+          <select id="cargo">
+            <option value="">Selecione o cargo</option>
+            <option value="Coordenador de Vendas">Coordenador de Vendas</option>
+            <option value="Consultor de Negócios">Consultor de Negócios</option>
+            <option value="Gerente Comercial">Gerente Comercial</option>
+          </select>
+        </div>
+
+        <!-- Departamento -->
+        <div class="form-group">
+          <label><i class="fas fa-building"></i> Departamento</label>
+          <select id="departamento">
+            <option value="">Selecione o departamento</option>
+            <option value="Financeiro">Financeiro</option>
+            <option value="Comercial">Comercial</option>
+            <option value="TI">Tecnologia</option>
+            <option value="Operações">Operações</option>
+          </select>
+        </div>
+
+        <!-- E-mail corporativo -->
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> E-mail corporativo</label>
+          <input type="email" id="emailFuncionario" placeholder="ana@financepro.com" autocomplete="email">
+        </div>
+
+        <!-- Telefone / Contato -->
+        <div class="form-group">
+          <label><i class="fas fa-phone-alt"></i> Telefone / WhatsApp</label>
+          <input type="tel" id="telefoneFuncionario" placeholder="(11) 98765-4321" autocomplete="tel">
+        </div>
+
+        <!-- Data de admissão -->
+        <div class="form-group">
+          <label><i class="fas fa-calendar-alt"></i> Data de admissão</label>
+          <input type="date" id="dataAdmissao">
+        </div>
+
+        <!-- Salário (apenas demonstrativo) -->
+        <div class="form-group">
+          <label><i class="fas fa-money-bill-wave"></i> Salário (R$)</label>
+          <input type="number" id="salario" step="100" placeholder="Ex: 4500">
+        </div>
+
+        <!-- Matrícula / ID Funcionário -->
+        <div class="form-group">
+          <label><i class="fas fa-qrcode"></i> Matrícula</label>
+          <input type="text" id="matricula" placeholder="Gerar automaticamente ou digitar">
+        </div>
+
+        <!-- Senha de acesso ao sistema -->
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Senha de acesso</label>
+          <input type="password" id="senhaAcesso" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        </div>
+
+        <!-- Confirmar senha -->
+        <div class="form-group">
+          <label><i class="fas fa-check-circle"></i> Confirmar senha</label>
+          <input type="password" id="confirmarSenhaAcesso" placeholder="Digite novamente" autocomplete="off">
+        </div>
+
+        <!-- Nível de permissão -->
+        <div class="form-group full-width">
+          <label><i class="fas fa-shield-alt"></i> Nível de permissão</label>
+          <select id="nivelPermissao">
+            <option value="user">Usuário padrão (acesso limitado)</option>
+            <option value="supervisor">Supervisor (gerenciar equipe)</option>
+            <option value="admin">Administrador (acesso total)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Termos e políticas internas -->
+      <div class="checkbox-group">
+        <input type="checkbox" id="termosTrabalho">
+        <label for="termosTrabalho" class="checkbox-label">
+          Confirmo que os dados são verdadeiros e aceito as <a href="#">Políticas Internas</a> e <a href="#">Código de Conduta</a>.
+        </label>
+      </div>
+
+      <div class="checkbox-group">
+        <input type="checkbox" id="acessoRegistro">
+        <label for="acessoRegistro" class="checkbox-label">
+          Autorizo o registro de ponto eletrônico e uso de sistema interno.
+        </label>
+      </div>
+
+      <button type="button" id="btnCadastrarFuncionario">
+        <i class="fas fa-user-plus"></i> Cadastrar Funcionário
+      </button>
+    </form>
+
+    <div class="login-link">
+      <p><i class="fas fa-arrow-left"></i> <a href="menu.html">Voltar para Menu</a> · Área restrita RH</p>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Botão de cadastro
+      const btnCadastrar = document.getElementById('btnCadastrarFuncionario');
+      
+      // Campos do formulário
+      const nomeInput = document.getElementById('nomeFuncionario');
+      const cargoSelect = document.getElementById('cargo');
+      const departamentoSelect = document.getElementById('departamento');
+      const emailInput = document.getElementById('emailFuncionario');
+      const telefoneInput = document.getElementById('telefoneFuncionario');
+      const dataAdmissaoInput = document.getElementById('dataAdmissao');
+      const salarioInput = document.getElementById('salario');
+      const matriculaInput = document.getElementById('matricula');
+      const senhaInput = document.getElementById('senhaAcesso');
+      const confirmarSenhaInput = document.getElementById('confirmarSenhaAcesso');
+      const permissaoSelect = document.getElementById('nivelPermissao');
+      const termostrabalhoCheck = document.getElementById('termosTrabalho');
+      const acessoRegistroCheck = document.getElementById('acessoRegistro');
+      
+      // Função para mostrar erros customizados inline (remove antigos)
+      function mostrarErro(campo, mensagem) {
+        // Remove erro existente
+        let existingError = campo.parentNode.querySelector('.error-msg');
+        if (existingError) existingError.remove();
+        
+        if (mensagem) {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'error-msg';
+          errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensagem}`;
+          campo.parentNode.appendChild(errorDiv);
+          campo.style.borderColor = '#fecaca';
+        } else {
+          campo.style.borderColor = '';
+        }
+      }
+      
+      function limparErros() {
+        const inputs = [nomeInput, cargoSelect, departamentoSelect, emailInput, telefoneInput, dataAdmissaoInput, salarioInput, matriculaInput, senhaInput, confirmarSenhaInput];
+        inputs.forEach(input => {
+          input.style.borderColor = '';
+          const err = input.parentNode.querySelector('.error-msg');
+          if (err) err.remove();
+        });
+      }
+      
+      // Validação de e-mail
+      function isValidEmail(email) {
+        return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
+      }
+      
+      // Formatar telefone enquanto digita (opcional, apenas visual)
+      function formatPhone(value) {
+        let numbers = value.replace(/\D/g, '');
+        if (numbers.length <= 2) return numbers;
+        if (numbers.length <= 6) return `(${numbers.slice(0,2)}) ${numbers.slice(2)}`;
+        if (numbers.length <= 10) return `(${numbers.slice(0,2)}) ${numbers.slice(2,6)}-${numbers.slice(6)}`;
+        return `(${numbers.slice(0,2)}) ${numbers.slice(2,7)}-${numbers.slice(7,11)}`;
+      }
+      
+      telefoneInput.addEventListener('input', function(e) {
+        let raw = e.target.value.replace(/\D/g, '');
+        if (raw.length > 11) raw = raw.slice(0,11);
+        e.target.value = formatPhone(raw);
+      });
+      
+      // Geração automática de matrícula baseada em timestamp + nome
+      function gerarMatriculaAuto(nome) {
+        if (!nome) return 'FUNC' + Math.floor(Math.random() * 10000);
+        const prefix = nome.trim().substring(0, 2).toUpperCase().replace(/[^A-Z]/g, '');
+        const sufixo = Math.floor(Math.random() * 9000 + 1000);
+        return `${prefix || 'FC'}${sufixo}`;
+      }
+      
+      // Ao preencher nome, se matrícula estiver vazia, sugerimos automática
+      nomeInput.addEventListener('blur', function() {
+        if (!matriculaInput.value.trim() && nomeInput.value.trim()) {
+          matriculaInput.value = gerarMatriculaAuto(nomeInput.value);
+        }
+      });
+      
+      // Função principal de cadastro
+      function cadastrarFuncionario() {
+        limparErros();
+        let isValid = true;
+        
+        // 1. Nome
+        const nome = nomeInput.value.trim();
+        if (nome === "") {
+          mostrarErro(nomeInput, "Informe o nome completo do funcionário");
+          isValid = false;
+        } else if (nome.length < 5) {
+          mostrarErro(nomeInput, "Nome muito curto (mínimo 5 caracteres)");
+          isValid = false;
+        }
+        
+        // 2. Cargo
+        const cargo = cargoSelect.value;
+        if (!cargo) {
+          mostrarErro(cargoSelect, "Selecione um cargo válido");
+          isValid = false;
+        }
+        
+        // 3. Departamento
+        const departamento = departamentoSelect.value;
+        if (!departamento) {
+          mostrarErro(departamentoSelect, "Escolha o departamento");
+          isValid = false;
+        }
+        
+        // 4. E-mail corporativo
+        const email = emailInput.value.trim();
+        if (email === "") {
+          mostrarErro(emailInput, "E-mail corporativo é obrigatório");
+          isValid = false;
+        } else if (!isValidEmail(email)) {
+          mostrarErro(emailInput, "Digite um e-mail válido (ex: nome@empresa.com)");
+          isValid = false;
+        }
+        
+        // 5. Telefone
+        const telefoneRaw = telefoneInput.value.trim();
+        if (telefoneRaw === "") {
+          mostrarErro(telefoneInput, "Telefone para contato é obrigatório");
+          isValid = false;
+        } else {
+          const numbersOnly = telefoneRaw.replace(/\D/g, '');
+          if (numbersOnly.length < 10 || numbersOnly.length > 11) {
+            mostrarErro(telefoneInput, "Telefone inválido (DDD + 8 ou 9 dígitos)");
+            isValid = false;
+          }
+        }
+        
+        // 6. Data de admissão
+        const dataAdmissao = dataAdmissaoInput.value;
+        if (!dataAdmissao) {
+          mostrarErro(dataAdmissaoInput, "Selecione a data de admissão");
+          isValid = false;
+        } else {
+          const hoje = new Date();
+          const dataEscolhida = new Date(dataAdmissao);
+          if (dataEscolhida > hoje) {
+            mostrarErro(dataAdmissaoInput, "A data de admissão não pode ser futura");
+            isValid = false;
+          }
+        }
+        
+        // 7. Salário (opcional mas recomendado)
+        let salario = salarioInput.value.trim();
+        if (salario !== "") {
+          const salarioNum = parseFloat(salario);
+          if (isNaN(salarioNum) || salarioNum < 0) {
+            mostrarErro(salarioInput, "Salário inválido");
+            isValid = false;
+          } else if (salarioNum > 50000) {
+            mostrarErro(salarioInput, "Valor excede limite máximo");
+            isValid = false;
+          }
+        }
+        
+        // 8. Matrícula
+        let matricula = matriculaInput.value.trim();
+        if (matricula === "") {
+          matricula = gerarMatriculaAuto(nome);
+          matriculaInput.value = matricula;
+        } else if (matricula.length < 3) {
+          mostrarErro(matriculaInput, "Matrícula muito curta (mínimo 3 caracteres)");
+          isValid = false;
+        }
+        
+        // 9. Senha
+        const senha = senhaInput.value;
+        if (senha === "") {
+          mostrarErro(senhaInput, "A senha de acesso é obrigatória");
+          isValid = false;
+        } else if (senha.length < 6) {
+          mostrarErro(senhaInput, "A senha deve ter pelo menos 6 caracteres");
+          isValid = false;
+        }
+        
+        // 10. Confirmar senha
+        const confirmarSenha = confirmarSenhaInput.value;
+        if (confirmarSenha !== senha) {
+          mostrarErro(confirmarSenhaInput, "As senhas não coincidem");
+          isValid = false;
+        }
+        
+        // 11. Termos e condições internas
+        if (!termostrabalhoCheck.checked) {
+          mostrarErro(termostrabalhoCheck.parentNode, "Você precisa aceitar as Políticas Internas", true);
+          const errDiv = termostrabalhoCheck.parentNode.querySelector('.error-msg');
+          if (!errDiv) {
+            const errorSpan = document.createElement('div');
+            errorSpan.className = 'error-msg';
+            errorSpan.style.marginTop = '4px';
+            errorSpan.innerHTML = '<i class="fas fa-exclamation-circle"></i> Aceite as políticas para continuar';
+            termostrabalhoCheck.parentNode.appendChild(errorSpan);
+          }
+          isValid = false;
+        }
+        
+        // 12. Autorização registro (opcional, mas se não aceitar exibe alerta suave)
+        if (!acessoRegistroCheck.checked) {
+          // Mostra aviso sutil mas não bloqueia totalmente, mas vamos sugerir que é recomendado
+          const msgAviso = document.createElement('div');
+          msgAviso.className = 'error-msg';
+          msgAviso.innerHTML = '<i class="fas fa-info-circle"></i> Para o funcionário ter acesso ao ponto, é recomendado autorizar.';
+          msgAviso.style.color = '#e67e22';
+          if (!acessoRegistroCheck.parentNode.querySelector('.aviso-ponto')) {
+            msgAviso.classList.add('aviso-ponto');
+            acessoRegistroCheck.parentNode.appendChild(msgAviso);
+            setTimeout(() => { if(msgAviso.remove) msgAviso.remove(); }, 3000);
+          }
+          // Não bloqueia cadastro mas destacamos
+        }
+        
+        if (!isValid) return;
+        
+        // Monta objeto funcionário
+        const funcionario = {
+          nome: nome,
+          cargo: cargo,
+          departamento: departamento,
+          email: email,
+          telefone: telefoneRaw,
+          dataAdmissao: dataAdmissao,
+          salario: salario ? parseFloat(salario) : null,
+          matricula: matricula,
+          nivelPermissao: permissaoSelect.value,
+          dataCadastro: new Date().toLocaleString()
+        };
+        
+        // Simula envio para backend (armazenar no localStorage apenas para demonstração)
+        let funcionarios = [];
+        const stored = localStorage.getItem('funcionarios_financapro');
+        if (stored) {
+          funcionarios = JSON.parse(stored);
+        }
+        funcionarios.push(funcionario);
+        localStorage.setItem('funcionarios_financapro', JSON.stringify(funcionarios));
+        
+        // Exibe mensagem de sucesso com estilo
+        const successDiv = document.createElement('div');
+        successDiv.style.cssText = `
+          background: #dcfce7; color: #15803d; padding: 14px; border-radius: 16px; 
+          margin-top: 20px; text-align: center; font-weight: 600; 
+          display: flex; align-items: center; justify-content: center; gap: 12px;
+          border-left: 4px solid #22c55e;
+        `;
+        successDiv.innerHTML = `<i class="fas fa-check-circle" style="font-size: 1.2rem;"></i> Funcionário ${nome} cadastrado com sucesso! Matrícula: ${matricula}`;
+        const formContainer = document.getElementById('cadastroFuncionarioForm');
+        const existingMsg = document.querySelector('.success-toast');
+        if (existingMsg) existingMsg.remove();
+        successDiv.classList.add('success-toast');
+        formContainer.parentNode.insertBefore(successDiv, formContainer.nextSibling);
+        
+        // Limpa campos opcionais mas mantém para novo cadastro? Vamos resetar apenas se quiser, mas sem refresh da página
+        setTimeout(() => {
+          if (successDiv.remove) successDiv.remove();
+        }, 4000);
+        
+        // Limpar formulário para novo cadastro (opcional)
+        // Reset nos campos principais menos matrícula que pode permanecer automática
+        nomeInput.value = '';
+        cargoSelect.value = '';
+        departamentoSelect.value = '';
+        emailInput.value = '';
+        telefoneInput.value = '';
+        dataAdmissaoInput.value = '';
+        salarioInput.value = '';
+        matriculaInput.value = '';
+        senhaInput.value = '';
+        confirmarSenhaInput.value = '';
+        permissaoSelect.value = 'user';
+        termostrabalhoCheck.checked = false;
+        acessoRegistroCheck.checked = false;
+        
+        // Foco no nome
+        nomeInput.focus();
+        
+        // Mostrar alerta amigável
+        alert(`✅ Cadastro concluído!\n\nFuncionário: ${nome}\nMatrícula: ${matricula}\nAcesso liberado com as credenciais definidas.`);
+      }
+      
+      btnCadastrar.addEventListener('click', cadastrarFuncionario);
+      
+      // Permite submit com Enter
+      const form = document.getElementById('cadastroFuncionarioForm');
+      form.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          cadastrarFuncionario();
+        }
+      });
+      
+      // Se o usuário não preencher matrícula, ao clicar no campo gerar automática se nome já existir
+      matriculaInput.addEventListener('focus', function() {
+        if (!matriculaInput.value.trim() && nomeInput.value.trim()) {
+          matriculaInput.value = gerarMatriculaAuto(nomeInput.value);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+```

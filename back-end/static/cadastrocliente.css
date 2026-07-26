@@ -1,0 +1,310 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ background: linear-gradient(135deg, #1e4f8a 0%, #0c2b4f 100%);;
+  color: #1e2937;
+}
+       .menu-trigger {
+            position: fixed;
+            left: 30px;
+            top: 30px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #1e4f8a 0%, #0c2b4f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .menu-trigger:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-trigger i {
+            font-size: 24px;
+            color: white;
+        }
+
+        /* Menu lateral */
+        .side-menu {
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+            transition: left 0.5s cubic-bezier(0.4, 0, 0.22, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .menu-trigger:hover + .side-menu,
+        .side-menu:hover {
+            left: 0;
+        }
+
+        /* Menu Header */
+        .menu-header {
+            background: linear-gradient(135deg, #1e4f8a 0%, #0c2b4f 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .menu-header h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-header p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Itens do menu */
+        .menu-items {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.5rem;
+            color: #2d3748;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            gap: 12px;
+        }
+
+        .menu-item:hover {
+            background: #f7fafc;
+            border-left-color: #1e4f8a;
+            padding-left: 2rem;
+        }
+
+        .menu-item i {
+            width: 30px;
+            font-size: 1.2rem;
+            color: #1e4f8a;
+        }
+
+        .menu-item span {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 0.8rem 1.5rem;
+        }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 25px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.header-left h1 {
+  font-size: 28px;
+  color: #1e2937;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==================== NOVO CLIENTE ==================== */
+.novo-cliente {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  padding: 45px 40px;
+  border-radius: 20px;
+  margin-bottom: 50px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.novo-cliente h2 {
+  font-size: 42px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 35px;
+  color: #1e2937;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #334155;
+}
+
+.form-group input {
+  padding: 14px 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: all 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #0c2b4f;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.tipo-cliente {
+  display: flex;
+  gap: 25px;
+  margin-top: 8px;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Botões com toque de azul */
+.btn-cadastrar {
+  background-color:#0c2b4f;
+  color: white;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 30px;
+  width: 100%;
+  transition: all 0.3s;
+}
+
+.btn-cadastrar:hover {
+  background-color: #000d32;
+  transform: translateY(-2px);
+}
+
+.btn-ver {
+  background-color: #0c2b4f;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-ver:hover {
+  background-color: #0c2b4f;
+}
+
+.exportar {
+  background-color: #64748b;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 20px;
+  float: right;
+}
+
+/* Clientes Cadastrados */
+.clientes-cadastrados {
+  background: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.clientes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.clientes-header h3 {
+  font-size: 26px;
+  color: #0c2b4f;
+  font-weight: 700;
+}
+
+.search-input {
+  padding: 12px 20px;
+  width: 340px;
+  border: 1px solid #0c2b4f;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.search-input:hover{
+ outline: none;
+  border-color: #0c2b4f;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 16px 14px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .novo-cliente h2 { font-size: 36px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .search-input { width: 100%; }
+}

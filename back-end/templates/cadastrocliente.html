@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Clientes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='cadastrocliente.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="menu-trigger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="side-menu">
+        <div class="menu-header">
+            <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3>Olá, Usuário</h3>
+            <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
+        </div>
+        
+        <div class="menu-items">
+            <a class="menu-item" href="{{ url_for('menu') }}">
+                <i class="fas fa-home"></i><span>Início</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('conserto') }}">
+                <i class="fas fa-wrench"></i><span>Conserto</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('cadastro') }}">
+                <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
+            </a>
+            
+            {% if session.get('cargo') == 'admin' %}
+            <a class="menu-item" href="{{ url_for('cadastro_funcionario') }}">
+                <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
+            </a>
+            {% endif %}
+            
+            <a class="menu-item" href="{{ url_for('cadastro_produtos') }}">
+                <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('vendas') }}">
+                <i class="fas fa-cash-register"></i><span>Vendas</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('extrato') }}">
+                <i class="fas fa-file-invoice"></i><span>Extrato</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('orcamento') }}">
+                <i class="fas fa-calculator"></i><span>Orçamento</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <a class="menu-item" href="{{ url_for('configuracao') }}">
+                <i class="fas fa-cog"></i><span>Configuração</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('suporte') }}">
+                <i class="fas fa-headset"></i><span>Suporte</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
+                <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+            </a>
+         </div>
+    </div>
+
+<div class="container">
+  <div class="novo-cliente">
+    <h2>Novo Cliente</h2>
+    
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Código / ID</label>
+        <input type="text" id="id-cliente" readonly class="input-disabled" title="Gerado automaticamente pelo sistema">
+      </div>
+
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" id="nome" placeholder="Ex: João Silva Santos">
+      </div>
+
+      <div class="form-group">
+        <label>CPF / CNPJ</label>
+        <input type="text" id="cpf" placeholder="000.000.000-00">
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="cliente@exemplo.com">
+      </div>
+
+      <div class="form-group">
+        <label>Telefone</label>
+        <input type="tel" id="telefone" placeholder="(81) 99999-9999">
+      </div>
+
+      <div class="form-group">
+        <label>Celular / WhatsApp</label>
+        <input type="tel" id="celular" placeholder="(81) 98888-8888">
+      </div>
+
+      <div class="form-group">
+        <label>Endereço</label>
+        <input type="text" id="endereco" placeholder="Rua, número, bairro">
+      </div>
+
+      <div class="form-group">
+        <label>Cidade</label>
+        <input type="text" id="cidade" value="Caruaru">
+      </div>
+
+      <div class="form-group">
+        <label>Estado</label>
+        <input type="text" id="estado" value="PE" style="width: 100px;">
+      </div>
+
+      <div class="form-group">
+        <label>CEP</label>
+        <input type="text" id="cep" value="55000-000">
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de Cliente</label>
+        <div class="tipo-cliente">
+          <label class="radio-group">
+            <input type="radio" name="tipo" value="Física" checked> Pessoa Física
+          </label>
+          <label class="radio-group">
+            <input type="radio" name="tipo" value="Jurídica"> Pessoa Jurídica
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-cadastrar" onclick="cadastrarCliente()">Cadastrar Cliente</button>
+  </div>
+
+  <div class="clientes-cadastrados">
+    <div class="clientes-header">
+      <h3>👥 Clientes Cadastrados</h3>
+      <input type="text" id="search" class="search-input" placeholder="🔍 Buscar por ID, nome, CPF..." onkeyup="filtrarClientes()">
+    </div>
+
+    <table id="tabelaClientes">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>CPF/CNPJ</th>
+          <th>Telefone</th>
+          <th>Tipo</th>
+          <th>Data de Cadastro</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button class="exportar" onclick="exportarClientes()">⬇ Exportar Clientes</button>
+  </div>
+
+</div>
+
+<script>
+// Array de clientes (carregado do localStorage)
+let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+
+// Função para calcular o próximo ID sequencial disponível baseado nos dados existentes
+function obterProximoId() {
+  if (clientes.length === 0) return 1;
+  const ids = clientes.map(c => parseInt(c.id) || 0);
+  return Math.max(...ids, 0) + 1;
+}
+
+// Função auxiliar para formatar o ID (Ex: 1 vira "0001")
+function formatarId(id) {
+  return String(id).padStart(4, '0');
+}
+
+// Atualiza o valor visível do ID no formulário com a nova formatação
+function atualizarIdInput() {
+  document.getElementById('id-cliente').value = `#${formatarId(obterProximoId())}`;
+}
+
+// Função para renderizar a tabela
+function renderizarTabela(filteredClientes = clientes) {
+  const tbody = document.querySelector('#tabelaClientes tbody');
+  tbody.innerHTML = '';
+
+  filteredClientes.forEach((cliente, index) => {
+    // Encontra o índice real no array principal para a função 'verCliente' funcionar mesmo com filtros ativos
+    const realIndex = clientes.findIndex(c => c.id === cliente.id);
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><strong>#${formatarId(cliente.id)}</strong></td> <td>${cliente.nome}</td>
+      <td>${cliente.cpf}</td>
+      <td>${cliente.celular || cliente.telefone}</td>
+      <td>${cliente.tipo}</td>
+      <td>${cliente.dataCadastro}</td>
+      <td><button class="btn-ver" onclick="verCliente(${realIndex})">Ver</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Cadastrar novo cliente
+function cadastrarCliente() {
+  const nome = document.getElementById('nome').value.trim();
+  const cpf = document.getElementById('cpf').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const celular = document.getElementById('celular').value.trim();
+  const endereco = document.getElementById('endereco').value.trim();
+  const cidade = document.getElementById('cidade').value.trim();
+  const estado = document.getElementById('estado').value.trim();
+  const cep = document.getElementById('cep').value.trim();
+  const tipo = document.querySelector('input[name="tipo"]:checked').value;
+
+  if (!nome || !cpf) {
+    alert('Nome e CPF/CNPJ são obrigatórios!');
+    return;
+  }
+
+  const novoCliente = {
+    id: obterProximoId(), // Continua salvando como número puro para o banco/localStorage
+    nome,
+    cpf,
+    email,
+    telefone,
+    celular,
+    endereco,
+    cidade,
+    estado,
+    cep,
+    tipo,
+    dataCadastro: new Date().toLocaleDateString('pt-BR')
+  };
+
+  clientes.unshift(novoCliente); // adiciona no topo da lista
+  localStorage.setItem('clientes', JSON.stringify(clientes));
+
+  renderizarTabela();
+  alert('Cliente cadastrado com sucesso!');
+
+  // Limpa o formulário mantendo as configurações padrão
+  document.querySelectorAll('.form-grid input').forEach(input => {
+    if (input.type !== 'radio' && input.id !== 'id-cliente') input.value = '';
+  });
+  document.getElementById('cidade').value = 'Caruaru';
+  document.getElementById('estado').value = 'PE';
+  document.getElementById('cep').value = '55000-000';
+  
+  // Recalcula e exibe o próximo ID disponível para o próximo cadastro
+  atualizarIdInput();
+}
+
+// Filtrar clientes (busca aprimorada incluindo o ID)
+function filtrarClientes() {
+  const termo = document.getElementById('search').value.toLowerCase().trim();
+  if (!termo) {
+    renderizarTabela();
+    return;
+  }
+
+  const filtrados = clientes.filter(cliente => 
+    String(cliente.id).includes(termo) ||
+    formatarId(cliente.id).includes(termo) || // Permite buscar digitando "0001"
+    cliente.nome.toLowerCase().includes(termo) ||
+    cliente.cpf.toLowerCase().includes(termo) ||
+    cliente.dataCadastro.includes(termo)
+  );
+
+  renderizarTabela(filtrados);
+}
+
+// Ver cliente detalhado
+function verCliente(index) {
+  const cliente = clientes[index];
+  if (!cliente) return;
+  alert(`ID: #${formatarId(cliente.id)}\nNome: ${cliente.nome}\nCPF/CNPJ: ${cliente.cpf}\nTipo: ${cliente.tipo}\nData: ${cliente.dataCadastro}\nTelefone: ${cliente.celular || cliente.telefone}\nEmail: ${cliente.email || 'Não informado'}`);
+}
+
+// Exportar para CSV atualizado com coluna ID
+function exportarClientes() {
+  if (clientes.length === 0) {
+    alert('Não há clientes para exportar.');
+    return;
+  }
+
+  let csv = 'ID,Nome,CPF/CNPJ,Tipo,Data de Cadastro,Telefone,Celular,Email\n';
+  clientes.forEach(c => {
+    csv += `"${formatarId(c.id)}","${c.nome}","${c.cpf}","${c.tipo}","${c.dataCadastro}","${c.telefone}","${c.celular}","${c.email}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'clientes.csv';
+  link.click();
+}
+
+// Inicializa os dados da página ao carregar
+atualizarIdInput();
+renderizarTabela();
+</script>
+
+</body>
+</html>

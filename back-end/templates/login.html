@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+  <div class="login-box">
+    <div class="logo-container">
+      <svg width="500" height="420" viewBox="0 0 500 420" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="250,60 340,108 250,156 160,108" fill="#185FA5"/>
+        <line x1="250" y1="60" x2="250" y2="34" stroke="#0C447C" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="250" cy="31" r="5" fill="#378ADD"/>
+        <polygon points="160,108 250,156 250,318 160,270" fill="#0C447C"/>
+        <polygon points="340,108 250,156 250,318 340,270" fill="#378ADD"/>
+        <polygon points="176.2,129.6  190.3,137.1  190.3,148.1  176.2,140.6" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="176.2,155.5  190.3,163.0  190.3,174.0  176.2,166.5" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="176.2,181.4  190.3,188.9  190.3,199.9  176.2,192.4" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="176.2,207.3  190.3,214.8  190.3,225.8  176.2,218.3" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="176.2,233.2  190.3,240.7  190.3,251.7  176.2,244.2" fill="#85B7EB" opacity="0.55"/>
+        <polygon points="200.5,142.6  214.6,150.1  214.6,161.1  200.5,153.6" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="200.5,168.5  214.6,176.0  214.6,187.0  200.5,179.5" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="200.5,194.4  214.6,201.9  214.6,212.9  200.5,205.4" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="200.5,220.3  214.6,227.8  214.6,238.8  200.5,231.3" fill="#85B7EB" opacity="0.6"/>
+        <polygon points="200.5,246.2  214.6,253.7  214.6,264.7  200.5,257.2" fill="#85B7EB" opacity="0.55"/>
+        <polygon points="323.8,129.6  309.7,137.1  309.7,148.1  323.8,140.6" fill="#0C447C" opacity="0.45"/>
+        <polygon points="323.8,155.5  309.7,163.0  309.7,174.0  323.8,166.5" fill="#0C447C" opacity="0.45"/>
+        <polygon points="323.8,181.4  309.7,188.9  309.7,199.9  323.8,192.4" fill="#0C447C" opacity="0.45"/>
+        <polygon points="323.8,207.3  309.7,214.8  309.7,225.8  323.8,218.3" fill="#0C447C" opacity="0.45"/>
+        <polygon points="323.8,233.2  309.7,240.7  309.7,251.7  323.8,244.2" fill="#0C447C" opacity="0.4"/>
+        <polygon points="299.5,142.6  285.4,150.1  285.4,161.1  299.5,153.6" fill="#0C447C" opacity="0.45"/>
+        <polygon points="299.5,168.5  285.4,176.0  285.4,187.0  299.5,179.5" fill="#0C447C" opacity="0.45"/>
+        <polygon points="299.5,194.4  285.4,201.9  285.4,212.9  299.5,205.4" fill="#0C447C" opacity="0.45"/>
+        <polygon points="299.5,220.3  285.4,227.8  285.4,238.8  299.5,231.3" fill="#0C447C" opacity="0.45"/>
+        <polygon points="299.5,246.2  285.4,253.7  285.4,264.7  299.5,257.2" fill="#0C447C" opacity="0.4"/>
+        <ellipse cx="250" cy="323" rx="90" ry="8" fill="#0C447C" opacity="0.08"/>
+        <text x="250" y="362" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="bold" fill="#185FA5" letter-spacing="10">SGE</text>
+        <line x1="148" y1="372" x2="352" y2="372" stroke="#378ADD" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <h1>Bem-vindo</h1>
+
+    <form id="loginForm" method="POST" action="/">
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="senha" placeholder="••••••••" autocomplete="current-password" required>
+        
+        <div class="mostrar-senha-wrapper">
+          <label class="checkbox-container">
+            <input type="checkbox" id="mostrarSenhaCheckbox">
+            <span>Mostrar senha</span>
+          </label>
+        </div>
+      </div>
+
+      <button type="button" id="btnEntrar">Entrar</button>
+    </form>
+
+    {% if erro %}
+      <p style="color: red; text-align: center; margin-top: 15px;">{{ erro }}</p>
+    {% endif %}
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('loginForm');
+    const senhaInput = document.getElementById('senha');
+    const mostrarSenhaCheckbox = document.getElementById('mostrarSenhaCheckbox');
+    const btnEntrar = document.getElementById('btnEntrar');
+
+    // 1. Alternar visibilidade da senha
+    mostrarSenhaCheckbox.addEventListener('change', function() {
+      senhaInput.type = this.checked ? 'text' : 'password';
+    });
+
+    // 2. Fazer o botão "button" enviar o formulário para o Flask
+    btnEntrar.addEventListener('click', function() {
+      // reportValidity() faz o navegador exibir o aviso nativo se o email ou senha estiverem vazios
+      if (loginForm.reportValidity()) {
+        // Se tudo estiver preenchido, envia o formulário para a rota '/' do Flask
+        loginForm.submit();
+      }
+    });
+
+    // 3. BÔNUS: Permitir logar apertando a tecla "Enter" no teclado
+    senhaInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Evita o comportamento padrão
+        btnEntrar.click();  // Simula um clique no botão Entrar
+      }
+    });
+  </script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechOrçamento - Sistema de Orçamentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="orçamento.css">
+
+<head>
+    <body>
+            <div class="menu-trigger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="side-menu">
+        <div class="menu-header">
+            <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3>Olá, Usuário</h3>
+            <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
+        </div>
+        
+            <div class="menu-items">
+            <!-- Botão para inicio -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='menu.html'">
+                <i class="fa fa-home" aria-hidden="true"></i><span>Inicio</span>
+            </a>
+
+            <!-- Botão para Cadastro de Clientes -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrocliente.html'">
+                <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
+            </a>
+            
+            <!-- Botão para Cadastro de Funcionários -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrofuncionario.html'">
+                <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
+            </a>
+            
+            <!-- Botão para Cadastro de Produtos (NOVO) -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastroprodutos.html'">
+                <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+            
+            <!-- Botão para Extrato -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='extrato.html'">
+                <i class="fas fa-file-invoice"></i><span>Extrato</span>
+            </a>
+
+            <!-- Botão para Orçamento -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='orçamento.html'">
+                <i class="fas fa-calculator"></i><span>Orçamento</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <!-- Botão para Configuração -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='configuração.html'">
+                <i class="fas fa-cog"></i><span>Configuração</span>
+            </a>
+            
+            <!-- Botão para Suporte -->
+            <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='suporte.html'">
+                <i class="fas fa-headset"></i><span>Suporte</span>
+            </a>
+            
+            <!-- Botão para Sair (com confirmação) -->
+            <a class="menu-item" href="javascript:void(0)" onclick="if(confirm('Tem certeza que deseja sair?')) window.location.href='login.html'">
+                <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+            </a>
+        </div>
+        
+    </div>
+    </body>
+</head>
+</head>
+<body>
+<div class="dashboard">
+    <!-- Cabeçalho -->
+    <div class="card">
+        <div class="card-header">
+            <div class="logo-area">
+                <div class="logo">🖥️</div>
+                <div>
+                    <h2>TECH ORÇAMENTO</h2>
+                    <div class="company-name">Vendas de Tecnologia | Notebooks | Softwares | Periféricos</div>
+                </div>
+            </div>
+            <div style="font-size: 0.8rem; background:#eef2ff; padding:6px 14px; border-radius:40px;">
+             
+            </div>
+        </div>
+    </div>
+
+    <!-- Dados do orçamento -->
+    <div class="card">
+        <div class="form-row">
+            <div class="input-group">
+                <label>Nº ORÇAMENTO</label>
+                <input type="text" id="orcamentoNumero" value="TECH-2025001" readonly style="background:#f1f5f9;">
+            </div>
+            <div class="input-group">
+                <label>DATA</label>
+                <input type="date" id="dataOrcamento">
+            </div>
+            <div class="input-group">
+                <label>VALIDADE</label>
+                <input type="date" id="validadeOrcamento">
+            </div>
+            <div class="input-group">
+                <label>CLIENTE</label>
+                <input type="text" id="clienteNome" placeholder="Nome do cliente / Empresa">
+            </div>
+            <div class="input-group">
+                <label>CNPJ/CPF</label>
+                <input type="text" id="clienteDoc" placeholder="CNPJ ou CPF">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="input-group">
+                <label>VENDEDOR</label>
+                <select id="vendedor">
+                    <option>Nogueira </option>
+                    <option>Caique </option>
+                    <option>Riquelme </option>
+                    <option>Luan chupa todas</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>CONTATO</label>
+                <input type="text" id="clienteContato" placeholder="Telefone / E-mail">
+            </div>
+        </div>
+    </div>
+
+    <!-- Catálogo -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📦 CATÁLOGO DE PRODUTOS</h2>
+        </div>
+        
+        <div class="categorias">
+            <button class="categoria-btn active" data-categoria="todos">📌 Todos</button>
+            <button class="categoria-btn" data-categoria="notebook">💻 Notebooks</button>
+            <button class="categoria-btn" data-categoria="impressora">🖨️ Impressoras</button>
+            <button class="categoria-btn" data-categoria="celular">📱 Celulares</button>
+            <button class="categoria-btn" data-categoria="software">💿 Softwares</button>
+            <button class="categoria-btn" data-categoria="periferico">🎮 Periféricos</button>
+        </div>
+
+        <div class="search-area">
+            <div class="flex-search">
+                <div class="input-group">
+                    <label>🔍 Buscar produto</label>
+                    <input type="text" id="buscaProduto" placeholder="Código, nome ou categoria...">
+                </div>
+                <div class="input-group">
+                    <label>Quantidade</label>
+                    <input type="number" id="quantidadeItem" value="1" min="1">
+                </div>
+                <button id="btnAdicionar">➕ Adicionar ao Orçamento</button>
+            </div>
+            <div id="sugestoes" class="sugestoes"></div>
+        </div>
+    </div>
+
+    <!-- Itens do orçamento -->
+    <div class="card">
+        <div class="card-header">
+            <h2>🛒 ITENS DO ORÇAMENTO</h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table id="tabelaOrcamento">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Produto</th>
+                        <th>Categoria</th>
+                        <th>Qtd</th>
+                        <th>Unitário (R$)</th>
+                        <th>Total (R$)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaItens">
+                    <tr class="empty-row">
+                        <td colspan="7">Nenhum produto adicionado ao orçamento</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="totals">
+            <div class="totals-line">
+                <span>📊 SUBTOTAL:</span>
+                <span id="subtotal">R$ 0,00</span>
+            </div>
+            <div class="discount-row">
+                <div class="input-group">
+                    <label>DESCONTO (%)</label>
+                    <input type="number" id="descontoPercent" value="0" step="0.5" min="0" max="100">
+                </div>
+                <div class="input-group">
+                    <label>DESCONTO (R$)</label>
+                    <input type="number" id="descontoReais" value="0" step="1" min="0">
+                </div>
+                <div class="input-group">
+                    <label>FRETE (R$)</label>
+                    <input type="number" id="frete" value="0" step="1" min="0">
+                </div>
+                <div class="input-group">
+                    <label>IMPOSTO (%)</label>
+                    <input type="number" id="impostoPercent" value="0" step="0.5" min="0">
+                </div>
+            </div>
+            <div class="totals-line total">
+                <span>💰 TOTAL GERAL:</span>
+                <span id="totalGeral">R$ 0,00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagamento -->
+    <div class="card">
+        <div class="form-row">
+            <div class="input-group">
+                <label>MÉTODO DE PAGAMENTO</label>
+                <select id="metodoPagamento">
+                    <option>PIX (10% desconto)</option>
+                    <option>Dinheiro (5% desconto)</option>
+                    <option>Cartão de Crédito</option>
+                    <option>Cartão de Débito</option>
+                    <option>Boleto Bancário</option>
+                    <option>Transferência TED/PIX</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>CONDIÇÃO</label>
+                <select id="condicaoPagamento">
+                    <option>À vista</option>
+                    <option>Parcelado 2x</option>
+                    <option>Parcelado 3x</option>
+                    <option>Parcelado 4x</option>
+                    <option>Parcelado 6x</option>
+                    <option>Parcelado 10x</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>GARANTIA</label>
+                <select id="garantia">
+                    <option>90 dias</option>
+                    <option>6 meses</option>
+                    <option>1 ano</option>
+                    <option>2 anos</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="input-group">
+                <label>OBSERVAÇÕES</label>
+                <textarea id="observacoes" rows="2" placeholder="Informações adicionais, condições de entrega, suporte técnico..."></textarea>
+            </div>
+        </div>
+        <div class="validade">
+            ⚡ Este orçamento tem validade de 30 dias. Após este período, os preços estão sujeitos à reajuste.
+        </div>
+        <div class="actions-bar">
+            <button id="btnLimpar" class="outline">🗑️ Limpar Tudo</button>
+            <button id="btnSalvar" class="success">💾 Salvar Orçamento</button>
+            <button id="btnCarregar" class="secondary">📂 Carregar Último</button>
+            <button id="btnPDF" class="secondary">📄 Gerar PDF</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ==================== CATÁLOGO DE PRODUTOS ====================
+    const catalogo = [
+        // Notebooks
+        { codigo: "NOTE-001", nome: "Dell Inspiron 15", categoria: "notebook", preco: 3499.90 },
+        { codigo: "NOTE-002", nome: "Lenovo Ideapad 3", categoria: "notebook", preco: 2899.90 },
+        { codigo: "NOTE-003", nome: "MacBook Air M1", categoria: "notebook", preco: 6999.90 },
+        { codigo: "NOTE-004", nome: "Acer Aspire 5", categoria: "notebook", preco: 3199.90 },
+        { codigo: "NOTE-005", nome: "Samsung Book E30", categoria: "notebook", preco: 2599.90 },
+        // Impressoras
+        { codigo: "IMP-001", nome: "HP LaserJet M110w", categoria: "impressora", preco: 899.90 },
+        { codigo: "IMP-002", nome: "EcoTank L3250", categoria: "impressora", preco: 1499.90 },
+        { codigo: "IMP-003", nome: "Canon PIXMA G3110", categoria: "impressora", preco: 1299.90 },
+        // Celulares
+        { codigo: "CEL-001", nome: "iPhone 14", categoria: "celular", preco: 4999.90 },
+        { codigo: "CEL-002", nome: "Samsung Galaxy S23", categoria: "celular", preco: 3999.90 },
+        { codigo: "CEL-003", nome: "Motorola Edge 30", categoria: "celular", preco: 2199.90 },
+        { codigo: "CEL-004", nome: "Xiaomi Redmi Note 12", categoria: "celular", preco: 1799.90 },
+        // Softwares
+        { codigo: "SOFT-001", nome: "Windows 11 Pro", categoria: "software", preco: 799.90 },
+        { codigo: "SOFT-002", nome: "Ubuntu Linux (Suporte)", categoria: "software", preco: 299.90 },
+        { codigo: "SOFT-003", nome: "Microsoft Office 365", categoria: "software", preco: 349.90 },
+        { codigo: "SOFT-004", nome: "Adobe Photoshop CC", categoria: "software", preco: 189.90 },
+        { codigo: "SOFT-005", nome: "Antivírus Kaspersky", categoria: "software", preco: 129.90 },
+        // Periféricos
+        { codigo: "PER-001", nome: "Mouse Gamer RGB", categoria: "periferico", preco: 89.90 },
+        { codigo: "PER-002", nome: "Teclado Mecânico", categoria: "periferico", preco: 199.90 },
+        { codigo: "PER-003", nome: "Monitor 24'' LED", categoria: "periferico", preco: 799.90 },
+        { codigo: "PER-004", nome: "Webcam Full HD", categoria: "periferico", preco: 149.90 },
+        { codigo: "PER-005", nome: "Headset Gamer", categoria: "periferico", preco: 159.90 },
+        { codigo: "PER-006", nome: "HD Externo 1TB", categoria: "periferico", preco: 399.90 }
+    ];
+
+    // ==================== VARIÁVEIS GLOBAIS ====================
+    let itens = [];
+    let categoriaAtiva = "todos";
+
+    // ==================== INICIALIZAÇÃO ====================
+    function inicializarDatas() {
+        const hoje = new Date();
+        document.getElementById('dataOrcamento').value = hoje.toISOString().slice(0,10);
+        
+        const validade = new Date();
+        validade.setDate(hoje.getDate() + 30);
+        document.getElementById('validadeOrcamento').value = validade.toISOString().slice(0,10);
+    }
+    inicializarDatas();
+
+    // ==================== FUNÇÃO PARA CATEGORIA ====================
+    function getCategoriaClass(categoria) {
+        const classes = {
+            'notebook': 'categoria-hardware',
+            'impressora': 'categoria-hardware',
+            'celular': 'categoria-hardware',
+            'software': 'categoria-software',
+            'periferico': 'categoria-perifericos'
+        };
+        return classes[categoria] || 'categoria-hardware';
+    }
+
+    function getCategoriaNome(categoria) {
+        const nomes = {
+            'notebook': 'Notebook',
+            'impressora': 'Impressora',
+            'celular': 'Celular',
+            'software': 'Software',
+            'periferico': 'Periférico'
+        };
+        return nomes[categoria] || categoria;
+    }
+
+    // ==================== FILTRO POR CATEGORIA ====================
+    document.querySelectorAll('.categoria-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            categoriaAtiva = btn.dataset.categoria;
+            mostrarSugestoes();
+        });
+    });
+
+    // ==================== BUSCA E SUGESTÕES ====================
+    const buscaInput = document.getElementById('buscaProduto');
+    const sugestoesDiv = document.getElementById('sugestoes');
+
+    function mostrarSugestoes() {
+        const termo = buscaInput.value.trim().toLowerCase();
+        
+        let filtrados = catalogo;
+        
+        if (categoriaAtiva !== "todos") {
+            filtrados = filtrados.filter(p => p.categoria === categoriaAtiva);
+        }
+        
+        if (termo.length > 0) {
+            filtrados = filtrados.filter(p => 
+                p.codigo.toLowerCase().includes(termo) || 
+                p.nome.toLowerCase().includes(termo)
+            );
+        }
+        
+        filtrados = filtrados.slice(0, 8);
+        
+        if (filtrados.length === 0) {
+            sugestoesDiv.innerHTML = '<span style="color:#94a3b8;">⚠️ Nenhum produto encontrado</span>';
+            return;
+        }
+        
+        sugestoesDiv.innerHTML = filtrados.map(p => `
+            <div class="sugestao-item" onclick="selecionarProduto('${p.codigo}')">
+                ${p.codigo} - ${p.nome} - R$ ${p.preco.toFixed(2)}
+            </div>
+        `).join('');
+    }
+
+    window.selecionarProduto = function(codigo) {
+        const prod = catalogo.find(p => p.codigo === codigo);
+        if (prod) {
+            buscaInput.value = `${prod.codigo} - ${prod.nome}`;
+            sugestoesDiv.innerHTML = '';
+        }
+    }
+
+    buscaInput.addEventListener('input', mostrarSugestoes);
+
+    // ==================== ADICIONAR ITEM ====================
+    document.getElementById('btnAdicionar').addEventListener('click', () => {
+        const textoBusca = buscaInput.value.trim();
+        let produto = null;
+        
+        for (let p of catalogo) {
+            if (textoBusca === p.codigo || 
+                textoBusca === p.nome || 
+                textoBusca.startsWith(p.codigo + " -") ||
+                textoBusca.includes(p.nome)) {
+                produto = p;
+                break;
+            }
+        }
+        
+        if (!produto) {
+            alert("❌ Produto não encontrado! Selecione um produto da lista de sugestões.");
+            return;
+        }
+        
+        const qtd = parseInt(document.getElementById('quantidadeItem').value);
+        if (isNaN(qtd) || qtd < 1) {
+            alert("❌ Quantidade inválida!");
+            return;
+        }
+        
+        const existente = itens.findIndex(i => i.codigo === produto.codigo);
+        if (existente !== -1) {
+            itens[existente].quantidade += qtd;
+        } else {
+            itens.push({
+                codigo: produto.codigo,
+                nome: produto.nome,
+                categoria: produto.categoria,
+                preco: produto.preco,
+                quantidade: qtd
+            });
+        }
+        
+        atualizarTabela();
+        buscaInput.value = '';
+        document.getElementById('quantidadeItem').value = '1';
+        sugestoesDiv.innerHTML = '';
+        mostrarNotificacao('✅ Produto adicionado com sucesso!', 'success');
+    });
+
+    // ==================== REMOVER ITEM ====================
+    window.removerItem = function(index) {
+        itens.splice(index, 1);
+        atualizarTabela();
+        mostrarNotificacao('🗑️ Item removido do orçamento', 'info');
+    }
+
+    // ==================== ALTERAR QUANTIDADE ====================
+    window.alterarQuantidade = function(index, valor) {
+        let qtd = parseInt(valor);
+        if (isNaN(qtd) || qtd < 1) qtd = 1;
+        itens[index].quantidade = qtd;
+        atualizarTabela();
+    }
+
+    // ==================== ATUALIZAR TABELA ====================
+    function atualizarTabela() {
+        const tbody = document.getElementById('tabelaItens');
+        
+        if (itens.length === 0) {
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Nenhum produto adicionado ao orçamento</td></tr>';
+            atualizarTotais();
+            return;
+        }
+        
+        let html = '';
+        itens.forEach((item, idx) => {
+            const totalItem = item.preco * item.quantidade;
+            html += `
+                <tr>
+                    <td>${item.codigo}</td>
+                    <td class="produto-nome">${item.nome}</td>
+                    <td><span class="categoria-badge ${getCategoriaClass(item.categoria)}">${getCategoriaNome(item.categoria)}</span></td>
+                    <td><input type="number" class="quantidade" value="${item.quantidade}" min="1" onchange="alterarQuantidade(${idx}, this.value)"></td>
+                    <td>R$ ${item.preco.toFixed(2)}</td>
+                    <td>R$ ${totalItem.toFixed(2)}</td>
+                    <td><button class="remover-item" onclick="removerItem(${idx})">✖</button></td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+        atualizarTotais();
+    }
+
+    // ==================== ATUALIZAR TOTAIS ====================
+    function atualizarTotais() {
+        let subtotal = itens.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+        
+        let descPercent = parseFloat(document.getElementById('descontoPercent').value) || 0;
+        let descReais = parseFloat(document.getElementById('descontoReais').value) || 0;
+        let freteVal = parseFloat(document.getElementById('frete').value) || 0;
+        let imposto = parseFloat(document.getElementById('impostoPercent').value) || 0;
+        
+        let valorDesconto = (subtotal * descPercent / 100) + descReais;
+        if (valorDesconto > subtotal) valorDesconto = subtotal;
+        
+        let aposDesconto = subtotal - valorDesconto;
+        let valorImposto = aposDesconto * imposto / 100;
+        let total = aposDesconto + valorImposto + freteVal;
+        
+        document.getElementById('subtotal').innerText = `R$ ${subtotal.toFixed(2)}`;
+        document.getElementById('totalGeral').innerText = `R$ ${total.toFixed(2)}`;
+    }
+
+    // ==================== SINCronizar DESCONTOS ====================
+    const descPercent = document.getElementById('descontoPercent');
+    const descReais = document.getElementById('descontoReais');
+    const frete = document.getElementById('frete');
+    const imposto = document.getElementById('impostoPercent');
+    
+    descPercent.addEventListener('input', () => { descReais.value = 0; atualizarTotais(); });
+    descReais.addEventListener('input', () => { descPercent.value = 0; atualizarTotais(); });
+    frete.addEventListener('input', atualizarTotais);
+    imposto.addEventListener('input', atualizarTotais);
+
+    // ==================== NOTIFICAÇÕES ====================
+    function mostrarNotificacao(mensagem, tipo) {
+        const notificacao = document.createElement('div');
+        notificacao.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${tipo === 'success' ? '#10b981' : tipo === 'error' ? '#ef4444' : '#3b82f6'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        `;
+        notificacao.textContent = mensagem;
+        document.body.appendChild(notificacao);
+        
+        setTimeout(() => {
+            notificacao.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notificacao.remove(), 300);
+        }, 2000);
+    }
+
+    // Estilos para animação
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ==================== LIMPAR ORÇAMENTO ====================
+    document.getElementById('btnLimpar').addEventListener('click', () => {
+        if (confirm("⚠️ Tem certeza que deseja limpar todos os itens?")) {
+            itens = [];
+            atualizarTabela();
+            document.getElementById('clienteNome').value = '';
+            document.getElementById('clienteDoc').value = '';
+            document.getElementById('clienteContato').value = '';
+            document.getElementById('descontoPercent').value = 0;
+            document.getElementById('descontoReais').value = 0;
+            document.getElementById('frete').value = 0;
+            document.getElementById('impostoPercent').value = 0;
+            document.getElementById('observacoes').value = '';
+            document.getElementById('metodoPagamento').value = 'PIX (10% desconto)';
+            document.getElementById('condicaoPagamento').value = 'À vista';
+            mostrarNotificacao('✨ Orçamento limpo com sucesso!', 'success');
+        }
+    });
+
+    // ==================== SALVAR ORÇAMENTO ====================
+    document.getElementById('btnSalvar').addEventListener('click', () => {
+        if (itens.length === 0) {
+            mostrarNotificacao('❌ Adicione pelo menos um produto ao orçamento!', 'error');
+            return;
+        }
+        
+        const orcamento = {
+            numero: document.getElementById('orcamentoNumero').value,
+            data: document.getElementById('dataOrcamento').value,
+            validade: document.getElementById('validadeOrcamento').value,
+            cliente: document.getElementById('clienteNome').value || "Cliente não informado",
+            documento: document.getElementById('clienteDoc').value || "Não informado",
+            contato: document.getElementById('clienteContato').value || "Não informado",
+            vendedor: document.getElementById('vendedor').value,
+            itens: itens,
+            descontoPercent: descPercent.value,
+            descontoReais: descReais.value,
+            frete: frete.value,
+            imposto: imposto.value,
+            total: document.getElementById('totalGeral').innerText,
+            pagamento: document.getElementById('metodoPagamento').value,
+            condicao: document.getElementById('condicaoPagamento').value,
+            garantia: document.getElementById('garantia').value,
+            obs: document.getElementById('observacoes').value || "Nenhuma"
+        };
+        
+        localStorage.setItem('techOrcamento', JSON.stringify(orcamento));
+        mostrarNotificacao('✅ Orçamento salvo com sucesso!', 'success');
+    });
+
+    // ==================== CARREGAR ÚLTIMO ORÇAMENTO ====================
+    document.getElementById('btnCarregar').addEventListener('click', () => {
+        const salvo = localStorage.getItem('techOrcamento');
+        if (!salvo) {
+            mostrarNotificacao('📭 Nenhum orçamento salvo encontrado!', 'info');
+            return;
+        }
+        
+        try {
+            const orcamento = JSON.parse(salvo);
+            itens = orcamento.itens;
+            document.getElementById('clienteNome').value = orcamento.cliente !== "Cliente não informado" ? orcamento.cliente : '';
+            document.getElementById('clienteDoc').value = orcamento.documento !== "Não informado" ? orcamento.documento : '';
+            document.getElementById('clienteContato').value = orcamento.contato !== "Não informado" ? orcamento.contato : '';
+            document.getElementById('vendedor').value = orcamento.vendedor;
+            document.getElementById('descontoPercent').value = orcamento.descontoPercent;
+            document.getElementById('descontoReais').value = orcamento.descontoReais;
+            document.getElementById('frete').value = orcamento.frete;
+            document.getElementById('impostoPercent').value = orcamento.imposto;
+            document.getElementById('observacoes').value = orcamento.obs !== "Nenhuma" ? orcamento.obs : '';
+            document.getElementById('metodoPagamento').value = orcamento.pagamento;
+            document.getElementById('condicaoPagamento').value = orcamento.condicao;
+            document.getElementById('garantia').value = orcamento.garantia;
+            
+            atualizarTabela();
+            mostrarNotificacao('📂 Orçamento carregado com sucesso!', 'success');
+        } catch (e) {
+            mostrarNotificacao('❌ Erro ao carregar orçamento!', 'error');
+        }
+    });
+
+    // ==================== GERAR PDF ====================
+    document.getElementById('btnPDF').addEventListener('click', () => {
+        if (itens.length === 0 && !confirm("Orçamento vazio. Gerar mesmo assim?")) return;
+        
+        const win = window.open();
+        
+        let tableRows = '';
+        itens.forEach(item => {
+            tableRows += `
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #e2e8f0;">${item.codigo}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #e2e8f0;">${item.nome}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; text-align:center">${item.quantidade}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; text-align:right">R$ ${item.preco.toFixed(2)}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #e2e8f0; text-align:right">R$ ${(item.preco * item.quantidade).toFixed(2)}</td>
+                </tr>
+            `;
+        });
+        
+        if (itens.length === 0) {
+            tableRows = '<tr><td colspan="5" style="text-align:center; padding:20px;">Nenhum produto adicionado</td></tr>';
+        }
+        
+        const subtotal = itens.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
+        const descP = parseFloat(descPercent.value) || 0;
+        const descR = parseFloat(descReais.value) || 0;
+        const freteVal = parseFloat(frete.value) || 0;
+        const imp = parseFloat(imposto.value) || 0;
+        
+        const docHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Orçamento ${document.getElementById('orcamentoNumero').value}</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                        font-family: 'Segoe UI', Roboto, sans-serif;
+                        background: white;
+                        padding: 40px;
+                        max-width: 1000px;
+                        margin: 0 auto;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 30px;
+                        padding-bottom: 20px;
+                        border-bottom: 3px solid #3b82f6;
+                    }
+                    h1 { color: #1e293b; margin-bottom: 10px; }
+                    .subtitle { color: #64748b; }
+                    .info {
+                        background: #f8fafc;
+                        padding: 15px;
+                        border-radius: 16px;
+                        margin-bottom: 20px;
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 10px;
+                    }
+                    .info p { margin: 5px 0; }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin: 20px 0;
+                    }
+                    th {
+                        background: #3b82f6;
+                        color: white;
+                        padding: 12px;
+                        text-align: left;
+                    }
+                    .totals {
+                        background: #f9f9fc;
+                        padding: 20px;
+                        border-radius: 16px;
+                        margin-top: 20px;
+                    }
+                    .totals div {
+                        display: flex;
+                        justify-content: space-between;
+                        padding: 5px 0;
+                    }
+                    .total-final {
+                        font-size: 1.3rem;
+                        font-weight: bold;
+                        color: #1e293b;
+                        border-top: 2px dashed #cbd5e1;
+                        margin-top: 10px;
+                        padding-top: 10px;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid #e2e8f0;
+                        font-size: 12px;
+                        color: #94a3b8;
+                    }
+                    @media print {
+                        body { padding: 20px; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>🖥️ TECHORÇAMENTO</h1>
+                    <div class="subtitle">Soluções em Tecnologia | Notebooks | Softwares | Periféricos</div>
+                </div>
+                
+                <div class="info">
+                    <p><strong>Nº Orçamento:</strong> ${document.getElementById('orcamentoNumero').value}</p>
+                    <p><strong>Data:</strong> ${document.getElementById('dataOrcamento').value}</p>
+                    <p><strong>Validade:</strong> ${document.getElementById('validadeOrcamento').value}</p>
+                    <p><strong>Cliente:</strong> ${document.getElementById('clienteNome').value || 'Não informado'}</p>
+                    <p><strong>CNPJ/CPF:</strong> ${document.getElementById('clienteDoc').value || 'Não informado'}</p>
+                    <p><strong>Contato:</strong> ${document.getElementById('clienteContato').value || 'Não informado'}</p>
+                    <p><strong>Vendedor:</strong> ${document.getElementById('vendedor').value}</p>
+                    <p><strong>Pagamento:</strong> ${document.getElementById('metodoPagamento').value} - ${document.getElementById('condicaoPagamento').value}</p>
+                    <p><strong>Garantia:</strong> ${document.getElementById('garantia').value}</p>
+                </div>
+                
+                <h3>ITENS DO ORÇAMENTO</h3>
+                <table>
+                    <thead>
+                        <tr><th>Código</th><th>Produto</th><th>Qtd</th><th>Unitário</th><th>Total</th></tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+                
+                <div class="totals">
+                    <div><strong>Subtotal:</strong> <span>R$ ${subtotal.toFixed(2)}</span></div>
+                    <div><strong>Desconto:</strong> <span>${descP > 0 ? descP + '%' : (descR > 0 ? 'R$ ' + descR.toFixed(2) : 'R$ 0,00')}</span></div>
+                    <div><strong>Frete:</strong> <span>R$ ${freteVal.toFixed(2)}</span></div>
+                    <div><strong>Imposto:</strong> <span>${imp}%</span></div>
+                    <div class="total-final"><strong>TOTAL GERAL:</strong> <span>${document.getElementById('totalGeral').innerText}</span></div>
+                </div>
+                
+                <div class="info">
+                    <p><strong>Observações:</strong> ${document.getElementById('observacoes').value || 'Nenhuma'}</p>
+                </div>
+                
+                <div class="footer">
+                    <p>Este orçamento tem validade de 30 dias. Os preços podem sofrer alterações sem aviso prévio.</p>
+                    <p>Documento gerado pelo Sistema TECHORÇAMENTO</p>
+                </div>
+                
+                <div class="no-print" style="text-align:center; margin-top:30px;">
+                    <button onclick="window.print()" style="padding:10px 20px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;">🖨️ Imprimir PDF</button>
+                    <button onclick="window.close()" style="padding:10px 20px; background:#64748b; color:white; border:none; border-radius:8px; cursor:pointer; margin-left:10px;">❌ Fechar</button>
+                </div>
+            </body>
+            </html>
+        `;
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações · TechManager</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+      <link rel="stylesheet" href="{{ url_for('static', filename='configuracao.css') }}">
+
+</head>
+<body>
+
+    <div class="menu-trigger">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <div class="side-menu">
+        <div class="menu-header">
+            <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
+            <h3>Olá, Usuário</h3>
+            <p><i class="fas fa-envelope"></i> admin@techmanager.com</p>
+        </div>
+        <div class="menu-items">
+            <a class="menu-item" href="{{ url_for('menu') }}">
+                <i class="fas fa-home"></i><span>Início</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('cadastro') }}">
+                <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
+            </a>
+            
+            {% if session.get('cargo') == 'admin' %}
+            <a class="menu-item" href="{{ url_for('cadastro_funcionario') }}">
+                <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
+            </a>
+            {% endif %}
+            
+            <a class="menu-item" href="{{ url_for('cadastro_produtos') }}">
+                <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('conserto') }}">
+                <i class="fas fa-wrench"></i><span>Conserto</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('vendas') }}">
+                <i class="fas fa-cash-register"></i><span>Vendas</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('extrato') }}">
+                <i class="fas fa-file-invoice"></i><span>Extrato</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('orcamento') }}">
+                <i class="fas fa-calculator"></i><span>Orçamento</span>
+            </a>
+            
+            <div class="menu-divider"></div>
+            
+            <a class="menu-item" href="{{ url_for('configuracao') }}">
+                <i class="fas fa-cog"></i><span>Configuração</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('suporte') }}">
+                <i class="fas fa-headset"></i><span>Suporte</span>
+            </a>
+            
+            <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
+                <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+            </a>
+         </div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <!-- Título -->
+        <div class="card grid-full">
+            <div class="card-header">
+                <i class="fas fa-cog"></i>
+                <h2>Configurações do Sistema</h2>
+            </div>
+            <div style="font-size: 0.85rem; color: #64748b;">
+                <i class="fas fa-info-circle"></i> Gerencie as configurações da sua conta e preferências do sistema
+            </div>
+        </div>
+
+        <!-- Perfil da Empresa -->
+        <div class="card grid-half">
+            <div class="card-header">
+                <i class="fas fa-building"></i>
+                <h3>Perfil da Empresa</h3>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-building"></i> Nome da Empresa</label>
+                    <input type="text" id="empresaNome" value="TechManager Soluções">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-id-card"></i> CNPJ</label>
+                    <input type="text" id="empresaCnpj" value="12.345.678/0001-90">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-phone"></i> Telefone</label>
+                    <input type="text" id="empresaTelefone" value="(11) 4002-8922">
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" id="empresaEmail" value="contato@techmanager.com">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+                    <input type="text" id="empresaEndereco" value="Av. Paulista, 1000 - São Paulo, SP">
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferências do Sistema -->
+        <div class="card grid-half">
+            <div class="card-header">
+                <i class="fas fa-sliders-h"></i>
+                <h3>Preferências</h3>
+            </div>
+            <div class="toggle-switch">
+                <div class="toggle-info">
+                    <i class="fas fa-bell"></i>
+                    <div>
+                        <strong>Notificações</strong>
+                        <p>Receber alertas e notificações do sistema</p>
+                    </div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="notificacoesToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="toggle-switch">
+                <div class="toggle-info">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <strong>Relatórios Automáticos</strong>
+                        <p>Enviar relatórios por e-mail semanalmente</p>
+                    </div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="relatoriosToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="toggle-switch">
+                <div class="toggle-info">
+                    <i class="fas fa-lock"></i>
+                    <div>
+                        <strong>Autenticação em Dois Fatores</strong>
+                        <p>Aumente a segurança da sua conta</p>
+                    </div>
+                </div>
+                <label class="toggle">
+                    <input type="checkbox" id="twoFactorToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Aparência -->
+        <div class="card grid-half">
+            <div class="card-header">
+                <i class="fas fa-palette"></i>
+                <h3>Aparência</h3>
+            </div>
+            <div class="tema-options">
+                <div class="tema-btn active" data-tema="claro">
+                    <i class="fas fa-sun"></i>
+                    <span>Claro</span>
+                </div>
+                <div class="tema-btn" data-tema="escuro">
+                    <i class="fas fa-moon"></i>
+                    <span>Escuro</span>
+                </div>
+                <div class="tema-btn" data-tema="auto">
+                    <i class="fas fa-laptop"></i>
+                    <span>Automático</span>
+                </div>
+            </div>
+            <div class="form-row" style="margin-top: 1rem;">
+                <div class="input-group">
+                    <label><i class="fas fa-font"></i> Tamanho da Fonte</label>
+                    <select id="fontSize">
+                        <option value="pequeno">Pequeno</option>
+                        <option value="medio" selected>Médio</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segurança -->
+        <div class="card grid-half">
+            <div class="card-header">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Segurança</h3>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-key"></i> Alterar Senha</label>
+                    <input type="password" id="novaSenha" placeholder="Nova senha">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-check-circle"></i> Confirmar Senha</label>
+                    <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label><i class="fas fa-database"></i> Backup dos Dados</label>
+                    <select id="backupFrequencia">
+                        <option value="diario">Diário</option>
+                        <option value="semanal" selected>Semanal</option>
+                        <option value="mensal">Mensal</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="card grid-full">
+            <div class="actions-bar">
+                <button id="btnCancelar" class="outline"><i class="fas fa-times"></i> Cancelar</button>
+                <button id="btnSalvar" class="success"><i class="fas fa-save"></i> Salvar Configurações</button>
+                <button id="btnResetar" class="danger"><i class="fas fa-undo-alt"></i> Restaurar Padrões</button>
+            </div>
+            <div style="margin-top: 1rem; padding: 0.8rem; background: #fef3c7; border-radius: 1rem; font-size: 0.75rem; color: #92400e;">
+                <i class="fas fa-exclamation-triangle"></i> As alterações nas configurações serão aplicadas imediatamente após salvar.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar notificações
+        function mostrarNotificacao(mensagem, tipo) {
+            const notificacao = document.createElement('div');
+            const cor = tipo === 'success' ? '#10b981' : tipo === 'error' ? '#ef4444' : '#3b82f6';
+            const icone = tipo === 'success' ? 'fa-check-circle' : (tipo === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle');
+            
+            notificacao.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${cor};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-weight: 500;
+                z-index: 2000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+            notificacao.innerHTML = `<i class="fas ${icone}"></i> ${mensagem}`;
+            document.body.appendChild(notificacao);
+            
+            setTimeout(() => {
+                notificacao.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notificacao.remove(), 300);
+            }, 3000);
+        }
+
+        // Salvar configurações
+        document.getElementById('btnSalvar')?.addEventListener('click', () => {
+            const novaSenha = document.getElementById('novaSenha')?.value;
+            const confirmarSenha = document.getElementById('confirmarSenha')?.value;
+            
+            if (novaSenha && novaSenha !== confirmarSenha) {
+                mostrarNotificacao('As senhas não coincidem!', 'error');
+                return;
+            }
+            
+            // Salvar no localStorage
+            const config = {
+                empresa: {
+                    nome: document.getElementById('empresaNome')?.value,
+                    cnpj: document.getElementById('empresaCnpj')?.value,
+                    telefone: document.getElementById('empresaTelefone')?.value,
+                    email: document.getElementById('empresaEmail')?.value,
+                    endereco: document.getElementById('empresaEndereco')?.value
+                },
+                preferencias: {
+                    notificacoes: document.getElementById('notificacoesToggle')?.checked,
+                    relatorios: document.getElementById('relatoriosToggle')?.checked,
+                    twoFactor: document.getElementById('twoFactorToggle')?.checked
+                },
+                aparencia: {
+                    tema: document.querySelector('.tema-btn.active')?.dataset.tema,
+                    fontSize: document.getElementById('fontSize')?.value
+                },
+                backup: document.getElementById('backupFrequencia')?.value
+            };
+            
+            localStorage.setItem('techConfig', JSON.stringify(config));
+            mostrarNotificacao('Configurações salvas com sucesso!', 'success');
+        });
+
+        // Restaurar padrões
+        document.getElementById('btnResetar')?.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja restaurar todas as configurações para os valores padrão?')) {
+                document.getElementById('empresaNome').value = 'TechManager Soluções';
+                document.getElementById('empresaCnpj').value = '12.345.678/0001-90';
+                document.getElementById('empresaTelefone').value = '(11) 4002-8922';
+                document.getElementById('empresaEmail').value = 'contato@techmanager.com';
+                document.getElementById('empresaEndereco').value = 'Av. Paulista, 1000 - São Paulo, SP';
+                document.getElementById('notificacoesToggle').checked = true;
+                document.getElementById('relatoriosToggle').checked = false;
+                document.getElementById('twoFactorToggle').checked = false;
+                document.getElementById('fontSize').value = 'medio';
+                document.getElementById('backupFrequencia').value = 'semanal';
+                document.getElementById('novaSenha').value = '';
+                document.getElementById('confirmarSenha').value = '';
+                
+                document.querySelectorAll('.tema-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.tema-btn[data-tema="claro"]').classList.add('active');
+                
+                mostrarNotificacao('Configurações restauradas para os valores padrão!', 'success');
+            }
+        });
+
+        // Cancelar
+        document.getElementById('btnCancelar')?.addEventListener('click', () => {
+            mostrarNotificacao('Alterações descartadas!', 'info');
+        });
+
+        // Tema buttons
+        document.querySelectorAll('.tema-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tema-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tema = btn.dataset.tema;
+                if (tema === 'escuro') {
+                    mostrarNotificacao('Tema escuro selecionado (em desenvolvimento)', 'info');
+                } else if (tema === 'claro') {
+                    mostrarNotificacao('Tema claro selecionado', 'info');
+                } else {
+                    mostrarNotificacao('Tema automático selecionado', 'info');
+                }
+            });
+        });
+
+        // Carregar configurações salvas
+        function carregarConfiguracoes() {
+            const salvo = localStorage.getItem('techConfig');
+            if (salvo) {
+                try {
+                    const config = JSON.parse(salvo);
+                    if (config.empresa) {
+                        document.getElementById('empresaNome').value = config.empresa.nome || '';
+                        document.getElementById('empresaCnpj').value = config.empresa.cnpj || '';
+                        document.getElementById('empresaTelefone').value = config.empresa.telefone || '';
+                        document.getElementById('empresaEmail').value = config.empresa.email || '';
+                        document.getElementById('empresaEndereco').value = config.empresa.endereco || '';
+                    }
+                    if (config.preferencias) {
+                        document.getElementById('notificacoesToggle').checked = config.preferencias.notificacoes || false;
+                        document.getElementById('relatoriosToggle').checked = config.preferencias.relatorios || false;
+                        document.getElementById('twoFactorToggle').checked = config.preferencias.twoFactor || false;
+                    }
+                    if (config.aparencia) {
+                        document.getElementById('fontSize').value = config.aparencia.fontSize || 'medio';
+                        document.querySelectorAll('.tema-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                            if (btn.dataset.tema === config.aparencia.tema) {
+                                btn.classList.add('active');
+                            }
+                        });
+                    }
+                    if (config.backup) {
+                        document.getElementById('backupFrequencia').value = config.backup;
+                    }
+                } catch(e) {}
+            }
+        }
+        
+        carregarConfiguracoes();
+    </script>
+</body>
+</html>
+

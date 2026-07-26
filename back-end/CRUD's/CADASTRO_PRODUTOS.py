@@ -1,4 +1,4 @@
-from database.connection import get_connection
+from CRUDS.connection import get_connection
 
 def criar_produto(nome_produto, id_categoria, und_produto, preco_at, preco_vrj, preco_custo, marca=None, estoque_atual=0):
     conn = get_connection()

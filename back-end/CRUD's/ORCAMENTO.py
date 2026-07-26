@@ -1,4 +1,4 @@
-from database.connection import get_connection
+from CRUDS.connection import get_connection
 from datetime import datetime
 
 def calcular_total_orcamento(

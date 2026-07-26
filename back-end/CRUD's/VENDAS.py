@@ -1,4 +1,4 @@
-from database.db import get_db_connection
+from CRUDS.db import get_db_connection
 from datetime import datetime
 from typing import Any, Dict, cast
 

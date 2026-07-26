@@ -1,15 +1,14 @@
 from flask import Flask, request, jsonify
-from database.db import get_db_connection
+from CRUDS.connection import get_connection
 
 app = Flask(__name__)
 
-# CREATE
-@app.route('/equipamentos', methods=['POST'])
+
 def cadastrar_equipamento():
 
     dados = request.json
 
-    conn = get_db_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -28,11 +27,9 @@ def cadastrar_equipamento():
     return jsonify({"mensagem": "Equipamento cadastrado com sucesso"}), 201
 
 
-# READ ALL
-@app.route('/equipamentos', methods=['GET'])
 def listar_equipamentos():
 
-    conn = get_db_connection()
+    conn = get_connection()
     cursor = conn.cursor(dictionary=True) #type: ignore
 
     cursor.execute("SELECT * FROM equipamento")
@@ -42,11 +39,9 @@ def listar_equipamentos():
     return jsonify(equipamentos)
 
 
-# READ ONE
-@app.route('/equipamentos/<int:id_equipamento>', methods=['GET'])
 def buscar_equipamento(id_equipamento):
 
-    conn = get_db_connection()
+    conn = get_connection()
     cursor = conn.cursor(dictionary=True) #type: ignore
 
     cursor.execute(
@@ -62,13 +57,12 @@ def buscar_equipamento(id_equipamento):
     return jsonify({"erro": "Equipamento não encontrado"}), 404
 
 
-# UPDATE
-@app.route('/equipamentos/<int:id_equipamento>', methods=['PUT'])
+
 def atualizar_equipamento(id_equipamento):
 
     dados = request.json
 
-    conn = get_db_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -91,11 +85,10 @@ def atualizar_equipamento(id_equipamento):
     return jsonify({"mensagem": "Equipamento atualizado com sucesso"})
 
 
-# DELETE
-@app.route('/equipamentos/<int:id_equipamento>', methods=['DELETE'])
+
 def excluir_equipamento(id_equipamento):
 
-    conn = get_db_connection()
+    conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(

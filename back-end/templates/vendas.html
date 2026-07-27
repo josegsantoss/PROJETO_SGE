@@ -111,7 +111,7 @@
                             <span class="badge-count" id="totalProdutos">0 produtos</span>
                         </div>
 
-                        <!-- BARRA DE PESQUISA POR CÓDIGO - NOVA -->
+                        <!-- BARRA DE PESQUISA POR CÓDIGO -->
                         <div class="search-area" style="background: #f0f7ff; padding: 12px; border-radius: 12px; margin-bottom: 12px; border: 2px solid #dbeafe;">
                             <div class="input-group" style="flex: 1;">
                                 <label><i class="fas fa-barcode"></i> Código do Produto</label>
@@ -187,33 +187,38 @@
                                 </div>
                             </div>
 
-                            <!-- DADOS DO CLIENTE - MAIS CAMPOS -->
+                            <!-- DADOS DO CLIENTE - LAYOUT ORGANIZADO EM 3 COLUNAS -->
                             <div class="cliente-area">
+                                <!-- Linha 1 -->
                                 <div class="input-group">
-                                    <label>Nome do Cliente *</label>
-                                    <input type="text" id="clienteNome" placeholder="Nome completo" list="clientesList">
+                                    <label>Nome do Cliente <small style="color: #94a3b8; font-weight: normal;">(Opcional)</small></label>
+                                    <input type="text" id="clienteNome" placeholder="Consumidor Final" list="clientesList">
                                 </div>
                                 <div class="input-group">
-                                    <label>CPF / CNPJ *</label>
+                                    <label>CPF / CNPJ </label>
                                     <input type="text" id="clienteDocumento" placeholder="000.000.000-00">
                                 </div>
                                 <div class="input-group">
                                     <label>Telefone</label>
                                     <input type="text" id="clienteTelefone" placeholder="(81) 99999-9999">
                                 </div>
+
+                                <!-- Linha 2 -->
                                 <div class="input-group">
                                     <label>E-mail</label>
                                     <input type="email" id="clienteEmail" placeholder="cliente@email.com">
                                 </div>
-                                <div class="input-group input-group-full">
+                                <div class="input-group">
                                     <label>Endereço</label>
-                                    <input type="text" id="clienteEndereco" placeholder="Rua, número, bairro, cidade">
+                                    <input type="text" id="clienteEndereco" placeholder="Rua, número">
                                 </div>
                                 <div class="input-group">
                                     <label>Desconto (%)</label>
-                                    <input type="number" id="desconto" value="0" min="0" max="100" oninput="calcularTotal()">
+                                    <input type="number" id="desconto" value="" min="0" max="100" step="0.01" placeholder="0,00" oninput="calcularTotal()">
                                 </div>
-                                <div class="input-group">
+
+                                <!-- Linha 3: Ocupa 2 colunas para encostar no Desconto (R$) -->
+                                <div class="input-group" style="grid-column: span 2;">
                                     <label>Forma de Pagamento</label>
                                     <select id="formaPagamento">
                                         <option value="Dinheiro">Dinheiro</option>
@@ -223,6 +228,10 @@
                                         <option value="Boleto">Boleto</option>
                                         <option value="Transferência">Transferência</option>
                                     </select>
+                                </div>
+                                <div class="input-group">
+                                    <label>Desconto (R$)</label>
+                                    <input type="number" id="descontoValor" value="" min="0" step="0.01" placeholder="0,00" oninput="calcularTotal()">
                                 </div>
                             </div>
 
@@ -364,7 +373,7 @@
             carregarHistorico();
             carregarUsuario();
 
-            // Adicionar evento de Enter na busca por código
+            // Evento de Enter na busca por código
             document.getElementById('buscaCodigo').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     buscarPorCodigoClick();
@@ -478,17 +487,10 @@
 
             const produto = produtos.find(p => p.codigo === codigo);
             if (produto) {
-                // Limpa a busca por nome e categoria
                 document.getElementById('buscaProduto').value = '';
                 document.getElementById('filtroCategoria').value = 'all';
-                
-                // Adiciona o produto ao carrinho
                 adicionarAoCarrinho(produto);
-                
-                // Mostra notificação de sucesso
                 mostrarNotificacao(`✅ Produto #${codigo} encontrado e adicionado!`, 'success');
-                
-                // Limpa o campo de código
                 document.getElementById('buscaCodigo').value = '';
             } else {
                 mostrarNotificacao(`❌ Produto com código #${codigo} não encontrado`, 'error');
@@ -601,9 +603,14 @@
 
         function calcularTotal() {
             const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
-            const valorDesconto = (subtotal * desconto) / 100;
-            const total = subtotal - valorDesconto;
+            
+            const descontoPorcentagem = parseFloat(document.getElementById('desconto').value) || 0;
+            const descontoReais = parseFloat(document.getElementById('descontoValor').value) || 0;
+
+            const valorDescontoPorcentagem = (subtotal * descontoPorcentagem) / 100;
+
+            let total = subtotal - valorDescontoPorcentagem - descontoReais;
+            if (total < 0) total = 0;
 
             document.getElementById('resumoTotal').textContent = `R$ ${total.toFixed(2)}`;
         }
@@ -624,23 +631,24 @@
                 return;
             }
 
-            const clienteNome = document.getElementById('clienteNome').value.trim();
+            // Pega os valores informados ou define padrão se o nome ficar em branco
+            const nomeInput = document.getElementById('clienteNome').value.trim();
+            const clienteNome = nomeInput !== '' ? nomeInput : 'Cliente Não Identificado';
+
             const clienteDocumento = document.getElementById('clienteDocumento').value.trim();
             const clienteTelefone = document.getElementById('clienteTelefone').value.trim();
             const clienteEmail = document.getElementById('clienteEmail').value.trim();
             const clienteEndereco = document.getElementById('clienteEndereco').value.trim();
 
-            if (!clienteNome || !clienteDocumento) {
-                mostrarNotificacao('Nome e CPF/CNPJ são obrigatórios!', 'error');
-                return;
-            }
-
-            const desconto = parseFloat(document.getElementById('desconto').value) || 0;
+            const descontoPorcentagem = parseFloat(document.getElementById('desconto').value) || 0;
+            const descontoReais = parseFloat(document.getElementById('descontoValor').value) || 0;
             const formaPagamento = document.getElementById('formaPagamento').value;
 
             const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-            const valorDesconto = (subtotal * desconto) / 100;
-            const total = subtotal - valorDesconto;
+            const valorDescontoPorcentagem = (subtotal * descontoPorcentagem) / 100;
+            
+            let total = subtotal - valorDescontoPorcentagem - descontoReais;
+            if (total < 0) total = 0;
 
             const dadosVenda = {
                 itens: carrinho.map(item => ({
@@ -655,10 +663,12 @@
                 cliente_telefone: clienteTelefone,
                 cliente_email: clienteEmail,
                 cliente_endereco: clienteEndereco,
-                desconto: desconto,
+                desconto_porcentagem: descontoPorcentagem,
+                desconto_reais: descontoReais,
+                desconto: descontoPorcentagem,
                 forma_pagamento: formaPagamento,
-                total: total,
-                subtotal: subtotal
+                subtotal: subtotal,
+                total: total
             };
 
             try {
@@ -678,15 +688,15 @@
                     atualizarCarrinho();
                     renderizarProdutos();
                     
-                    // Limpar campos do cliente
+                    // Limpar campos
                     document.getElementById('clienteNome').value = '';
                     document.getElementById('clienteDocumento').value = '';
                     document.getElementById('clienteTelefone').value = '';
                     document.getElementById('clienteEmail').value = '';
                     document.getElementById('clienteEndereco').value = '';
                     document.getElementById('desconto').value = '0';
+                    document.getElementById('descontoValor').value = '0';
                     
-                    // Recarregar histórico
                     carregarHistorico();
                 } else {
                     mostrarNotificacao(resultado.erro || 'Erro ao finalizar venda', 'error');

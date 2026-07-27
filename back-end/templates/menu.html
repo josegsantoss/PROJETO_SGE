@@ -90,8 +90,26 @@
                         <div class="value-medium">R$ 850,00</div>
                     </div>
                 </div>
-                <div>
-                    <span class="badge"><i class="fas fa-chart-line"></i> Última atualização: hoje</span>
+                
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div>
+                        <span class="badge"><i class="fas fa-chart-line"></i> Última atualização: <span id="data-hora"></span></span>
+                    </div>
+                    
+                    <!-- Sino de Notificações -->
+                    <div class="container-sino" id="container-sino"
+                         {% if config.notificacoes_ativas == 0 %}style="display: none;"{% endif %}>
+                        <i class="fas fa-bell" style="font-size: 1.5rem; color: #1e4f8a;"></i>
+                        <span id="badge-sino" class="badge-sino" style="display: none;">0</span>
+                        
+                        <!-- Dropdown de Notificações -->
+                        <div id="dropdown-notificacoes">
+                            <div style="padding: 12px 16px; border-bottom: 1px solid #eee; font-weight: 600; color: #1e4f8a;">
+                                Notificações
+                            </div>
+                            <ul id="lista-notificacoes" style="list-style: none; margin: 0; padding: 0;"></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -216,7 +234,59 @@
         const vendasHojeSpan = document.getElementById('vendasHoje');
         
         const circumference = 408.4;
-        
+
+        // ==================== FUNÇÕES DE NOTIFICAÇÕES ====================
+        function carregarNotificacoes() {
+            if (document.getElementById('container-sino').style.display === 'none') return;
+            
+            fetch('/api/notificacoes')
+            .then(res => res.json())
+            .then(data => {
+                const badge = document.getElementById('badge-sino');
+                const lista = document.getElementById('lista-notificacoes');
+                
+                if (data.length > 0) {
+                    badge.innerText = data.length;
+                    badge.style.display = 'block';
+                    lista.innerHTML = data.map(n => `
+                        <li onclick="marcarLida(${n.id})">${n.mensagem}</li>
+                    `).join('');
+                } else {
+                    badge.style.display = 'none';
+                    lista.innerHTML = '<li style="padding: 12px 16px; color: #888;">Nenhuma notificação nova.</li>';
+                }
+            })
+            .catch(err => console.error("Erro ao buscar notificações:", err));
+        }
+
+        function marcarLida(id) {
+            fetch(`/api/marcar-lida/${id}`, { method: 'POST' })
+            .then(() => carregarNotificacoes())
+            .catch(err => console.error("Erro ao marcar como lida:", err));
+        }
+
+        // Toggle dropdown sino
+        document.querySelector('.container-sino').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('dropdown-notificacoes');
+            dropdown.style.display = (dropdown.style.display === 'none' || !dropdown.style.display) ? 'block' : 'none';
+        });
+
+        document.addEventListener('click', function(event) {
+            const sino = document.querySelector('.container-sino');
+            const dropdown = document.getElementById('dropdown-notificacoes');
+            if (sino && dropdown && !sino.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        function atualizarDataHora() {
+            const agora = new Date();
+            const data = agora.toLocaleDateString('pt-BR');
+            const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('data-hora').textContent = `${data} às ${hora}`;
+        }
+
         function mostrarNotificacaoGlobal(mensagem, tipo) {
             const notificacao = document.createElement('div');
             const cor = tipo === 'success' ? '#10b981' : tipo === 'error' ? '#ef4444' : '#3b82f6';
@@ -228,105 +298,111 @@
             `;
             notificacao.innerHTML = `<i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i> ${mensagem}`;
             document.body.appendChild(notificacao);
+            
             setTimeout(() => {
                 notificacao.style.animation = 'slideOut 0.3s ease';
                 setTimeout(() => notificacao.remove(), 300);
             }, 2500);
         }
-        
+
         function atualizarProgresso() {
-            let percentual = (receitaAtual / metaMensal) * 100;
-            percentual = Math.min(percentual, 100);
+            let percentual = Math.min((receitaAtual / metaMensal) * 100, 100);
             const offset = circumference - (percentual / 100) * circumference;
             if (progressCircle) progressCircle.style.strokeDashoffset = offset;
             if (progressPercent) progressPercent.textContent = `${Math.round(percentual)}%`;
             if (metaValorExibido) metaValorExibido.textContent = `R$ ${metaMensal.toLocaleString()}`;
             if (receitaAtualSpan) receitaAtualSpan.textContent = `R$ ${receitaAtual.toLocaleString()}`;
+            
             const faltando = metaMensal - receitaAtual;
             if (faltandoMetaSpan) faltandoMetaSpan.textContent = `R$ ${faltando > 0 ? faltando.toLocaleString() : '0'}`;
             
             const receitaHojeSimulada = Math.min(receitaAtual * 0.12, receitaAtual);
-            if (receitaHojeSpan) receitaHojeSpan.textContent = `R$ ${receitaHojeSimulada.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            const vendasEstimadas = Math.max(8, Math.round(receitaAtual / 880));
-            if (vendasHojeSpan) vendasHojeSpan.textContent = vendasEstimadas;
+            if (receitaHojeSpan) receitaHojeSpan.textContent = `R$ ${receitaHojeSimulada.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            if (vendasHojeSpan) vendasHojeSpan.textContent = Math.max(8, Math.round(receitaAtual / 880));
             
+            // Achievement messages
             if (achievementMessage && achievementText) {
                 if (percentual >= 100) {
                     achievementMessage.style.display = 'flex';
-                    achievementText.innerHTML = '🎉 PARABÉNS! Meta atingida! Você superou todas as expectativas! 🎉';
+                    achievementText.innerHTML = '🎉 PARABÉNS! Meta atingida!';
                     achievementMessage.style.background = '#fef3c7';
                     achievementMessage.style.borderLeftColor = '#f59e0b';
                 } else if (percentual >= 75) {
                     achievementMessage.style.display = 'flex';
-                    achievementText.innerHTML = '🔥 Quase lá! Faltam apenas ' + (100 - Math.round(percentual)) + '% para bater a meta! Continue assim! 🔥';
+                    achievementText.innerHTML = `🔥 Quase lá! Faltam ${100 - Math.round(percentual)}%`;
                     achievementMessage.style.background = '#fef3c7';
                     achievementMessage.style.borderLeftColor = '#f59e0b';
                 } else if (percentual >= 50) {
                     achievementMessage.style.display = 'flex';
-                    achievementText.innerHTML = '📈 Bom progresso! Você já atingiu ' + Math.round(percentual) + '% da meta. Vamos continuar! 📈';
+                    achievementText.innerHTML = `📈 Bom progresso! ${Math.round(percentual)}% concluído`;
                     achievementMessage.style.background = '#e0f2fe';
                     achievementMessage.style.borderLeftColor = '#0284c7';
-                } else if (percentual >= 25) {
-                    achievementMessage.style.display = 'flex';
-                    achievementText.innerHTML = '💪 Começando bem! ' + Math.round(percentual) + '% concluído. Foco no objective! 💪';
-                    achievementMessage.style.background = '#f0fdf4';
-                    achievementMessage.style.borderLeftColor = '#10b981';
                 } else {
                     achievementMessage.style.display = 'none';
                 }
             }
         }
-        
+
         function atualizarMetas() {
             const novaMeta = parseFloat(novaMetaInput.value);
             const novaReceita = parseFloat(receitaAtualInput.value);
             if (!isNaN(novaMeta) && novaMeta > 0) metaMensal = novaMeta;
             if (!isNaN(novaReceita) && novaReceita >= 0) receitaAtual = novaReceita;
-            if (novaMetaInput) novaMetaInput.value = '';
-            if (receitaAtualInput) receitaAtualInput.value = '';
+            
+            novaMetaInput.value = '';
+            receitaAtualInput.value = '';
             atualizarProgresso();
             atualizarGraficoDinamico();
             mostrarNotificacaoGlobal('Meta e receita atualizadas com sucesso!', 'success');
         }
-        
+
         function atualizarGraficoDinamico() {
             const dias = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Hoje'];
             let receitas = [1870, 2100, 1950, 2300, 2580, 2430, receitaAtual * 0.12];
-            receitas[6] = Math.min(receitaAtual * 0.12, receitaAtual);
             const chartContainer = document.getElementById('chartContainer');
-            if (chartContainer) {
-                chartContainer.innerHTML = '';
-                const maxReceita = Math.max(...receitas, 2000);
-                receitas.forEach((valor, index) => {
-                    const barHeight = (valor / maxReceita) * 120;
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'bar-wrapper';
-                    const barValue = document.createElement('div');
-                    barValue.className = 'bar-value';
-                    barValue.textContent = `R$ ${Math.round(valor)}`;
-                    const barDiv = document.createElement('div');
-                    barDiv.className = 'bar';
-                    barDiv.style.height = Math.max(barHeight, 30) + 'px';
-                    const barLabel = document.createElement('div');
-                    barLabel.className = 'bar-label';
-                    barLabel.textContent = dias[index];
-                    wrapper.appendChild(barValue);
-                    wrapper.appendChild(barDiv);
-                    wrapper.appendChild(barLabel);
-                    chartContainer.appendChild(wrapper);
-                });
-            }
+            if (!chartContainer) return;
+            
+            chartContainer.innerHTML = '';
+            const maxReceita = Math.max(...receitas, 2000);
+            
+            receitas.forEach((valor, index) => {
+                const barHeight = (valor / maxReceita) * 120;
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-wrapper';
+                
+                wrapper.innerHTML = `
+                    <div class="bar-value">R$ ${Math.round(valor)}</div>
+                    <div class="bar" style="height: ${Math.max(barHeight, 30)}px"></div>
+                    <div class="bar-label">${dias[index]}</div>
+                `;
+                chartContainer.appendChild(wrapper);
+            });
         }
-        
-        if (atualizarMetaBtn) {
-            atualizarMetaBtn.addEventListener('click', atualizarMetas);
+
+        function verificarStatusNotificacoes() {
+            fetch('/api/carregar-config')
+                .then(res => res.json())
+                .then(data => {
+                    const sino = document.getElementById('container-sino');
+                    if (sino) sino.style.display = (data.notificacoes_ativas === 1) ? 'flex' : 'none';
+                })
+                .catch(err => console.error("Erro ao verificar notificações:", err));
         }
-        if (progressCircle) {
-            progressCircle.style.strokeDasharray = circumference;
-        }
-        
+
+        // Inicialização
+        if (atualizarMetaBtn) atualizarMetaBtn.addEventListener('click', atualizarMetas);
+        if (progressCircle) progressCircle.style.strokeDasharray = circumference;
+
+        atualizarDataHora();
+        verificarStatusNotificacoes();
+        carregarNotificacoes();
         atualizarProgresso();
         atualizarGraficoDinamico();
+
+        // Atualizações automáticas
+        setInterval(atualizarDataHora, 60000);
+        setInterval(carregarNotificacoes, 30000);
+        setInterval(verificarStatusNotificacoes, 60000);
     </script>
 </body>
 </html>

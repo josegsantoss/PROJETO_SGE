@@ -24,7 +24,6 @@
             <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
             <h3>Olá, {{ 'Administrador' if session.get('cargo') == 'admin' else 'Funcionário' }}</h3>
             <p><i class="fas fa-envelope"></i> {{ session.get('usuario_logado') }}</p>
-        </div>
         <div class="menu-items">
             <a class="menu-item" href="{{ url_for('menu') }}"><i class="fas fa-home"></i><span>Início</span></a>
             <a class="menu-item" href="{{ url_for('cadastro') }}"><i class="fas fa-address-card"></i><span>Cadastro de Clientes</span></a>

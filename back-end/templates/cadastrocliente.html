@@ -16,17 +16,13 @@
     <div class="side-menu">
         <div class="menu-header">
             <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
-            <h3>Olá, Usuário</h3>
-            <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
+            <h3>Olá, {{ 'Administrador' if session.get('cargo') == 'admin' else 'Funcionário' }}</h3>
+            <p><i class="fas fa-envelope"></i> {{ session.get('usuario_logado') }}</p>
         </div>
         
         <div class="menu-items">
             <a class="menu-item" href="{{ url_for('menu') }}">
                 <i class="fas fa-home"></i><span>Início</span>
-            </a>
-
-            <a class="menu-item" href="{{ url_for('conserto') }}">
-                <i class="fas fa-wrench"></i><span>Conserto</span>
             </a>
             
             <a class="menu-item" href="{{ url_for('cadastro') }}">
@@ -41,6 +37,10 @@
             
             <a class="menu-item" href="{{ url_for('cadastro_produtos') }}">
                 <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
+            </a>
+
+            <a class="menu-item" href="{{ url_for('conserto') }}">
+                <i class="fas fa-wrench"></i><span>Conserto</span>
             </a>
             
             <a class="menu-item" href="{{ url_for('vendas') }}">
@@ -68,6 +68,7 @@
             <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
+         </div>
          </div>
     </div>
 

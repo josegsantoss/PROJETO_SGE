@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispositivo Novo - SGE</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='verificar_2fa.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Novo Dispositivo Detectado!</h2>
+        <p>Como medida de segurança, enviamos um código de 6 dígitos para o seu e-mail. Digite-o abaixo para confirmar sua identidade.</p>
+        
+        {% if erro %}
+            <div class="erro">{{ erro }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('verificar_2fa') }}" method="POST">
+            <input type="text" name="codigo" placeholder="000000" maxlength="6" required autocomplete="off">
+            <button type="submit">Confirmar Acesso</button>
+        </form>
+        
+        <a href="{{ url_for('login') }}">← Voltar ao Login</a>
+    </div>
+
+</body>
+</html>

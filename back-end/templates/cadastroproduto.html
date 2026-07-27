@@ -18,8 +18,8 @@
     <div class="side-menu">
         <div class="menu-header">
             <div class="user-avatar"><i class="fas fa-user-circle"></i></div>
-            <h3>Olá, Usuário</h3>
-            <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
+            <h3>Olá, {{ 'Administrador' if session.get('cargo') == 'admin' else 'Funcionário' }}</h3>
+            <p><i class="fas fa-envelope"></i> {{ session.get('usuario_logado') }}</p>
         </div>
         
         <div class="menu-items">

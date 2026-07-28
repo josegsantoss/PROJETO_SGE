@@ -5,8 +5,8 @@ def get_connection():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="06022022", # <--- Tem que ser a senha força 100 que criamos!
-            database="tcc_sge"           # <--- O nome do banco de dados do seu TCC
+            password="passarinhoboludo123", # <--- Tem que ser a senha força 100 que criamos!
+            database="tcc_3tdsa"           # <--- O nome do banco de dados do seu TCC
         )
         return conn
     except Exception as e:

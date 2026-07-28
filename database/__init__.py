@@ -1,12 +1,18 @@
-from CRUDS.CADASTRO_USUARIOS import *
+from database.CADASTRO_EQUIPAMENTOS import *
 
-from CRUDS.CADASTRO_PRODUTOS import *
+from database.CADASTRO_PRODUTOS import *
 
-from CRUDS.CLIENTES import * 
+from database.CADASTRO_USUARIOS import * 
 
-from CRUDS.CADASTRO_EQUIPAMENTOS import *
+from database.CANCELAR_VENDAS import *
 
-from CRUDS.ORCAMENTO import *
+from database.CATEGORIAS import *
+
+from database.CLIENTES import *
+
+from database.ORCAMENTO import *
+
+from database.VENDAS import *
 
 __all__ = [
     'verificarLogin',
@@ -43,5 +49,6 @@ __all__ = [
     'criar_orcamento',
     'atualizar_orcamento',
     'excluir_orcamento',
-    'calcular_total_orcamento'
+    'calcular_total_orcamento',
+    'realizar_venda_de_produtos'
 ]

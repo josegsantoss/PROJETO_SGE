@@ -1,20 +1,9 @@
-from CRUDS.db import get_db_connection
+from database.db import get_db_connection
 from datetime import datetime
 from typing import Any, Dict, cast
 
 
 def realizar_venda_de_produtos(produtos, id_usuario):
-    """
-    Realiza venda de múltiplos produtos
-    
-    Args:
-        produtos: Lista de dicts com {'id_produto': int, 'quantidade': int}
-        id_usuario: ID do usuário realizando a venda
-    
-    Returns:
-        dict com id_venda e valor_total, ou None se erro
-    """
-    
     if not produtos:
         return None
     
@@ -23,7 +12,6 @@ def realizar_venda_de_produtos(produtos, id_usuario):
     
     valor_total = 0
     
-    # Calcula o total dos produtos
     for item in produtos:
         cursor.execute(
             "SELECT preço_vrj FROM produto WHERE id_produto = %s",
@@ -40,7 +28,6 @@ def realizar_venda_de_produtos(produtos, id_usuario):
         quantidade = item["quantidade"]
         valor_total += preco * quantidade
     
-    # Insere a venda
     cursor.execute(
         """
         INSERT INTO vendas (id_usuario, valor_inicial, valor_final, data_venda)
@@ -51,7 +38,6 @@ def realizar_venda_de_produtos(produtos, id_usuario):
     
     id_venda = cursor.lastrowid
     
-    # Insere cada item da venda
     for item in produtos:
         cursor.execute(
             "SELECT preço_vrj FROM produto WHERE id_produto = %s",

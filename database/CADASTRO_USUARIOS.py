@@ -1,4 +1,4 @@
-from CRUDS.connection import get_connection
+from database.connection import get_connection
 import mysql.connector
 
 def verificarLogin(email, senha):

@@ -25,49 +25,31 @@
             <p><i class="fas fa-envelope"></i> financeiro@empresa.com</p>
         </div>
         <div class="menu-items">
-            <!-- Botão para inicio -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='menu.html'">
                 <i class="fa fa-home" aria-hidden="true"></i><span>Inicio</span>
             </a>
-
-            <!-- Botão para Cadastro de Clientes -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrocliente.html'">
                 <i class="fas fa-address-card"></i><span>Cadastro de Clientes</span>
             </a>
-            
-            <!-- Botão para Cadastro de Funcionários -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastrofuncionario.html'">
                 <i class="fas fa-users"></i><span>Cadastro de Funcionários</span>
             </a>
-            
-            <!-- Botão para Cadastro de Produtos (NOVO) -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='cadastroprodutos.html'">
                 <i class="fas fa-box"></i><span>Cadastro de Produtos</span>
             </a>
-            
-            <!-- Botão para Extrato -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='extrato.html'">
                 <i class="fas fa-file-invoice"></i><span>Extrato</span>
             </a>
-
-            <!-- Botão para Orçamento -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='orçamento.html'">
                 <i class="fas fa-calculator"></i><span>Orçamento</span>
             </a>
-            
             <div class="menu-divider"></div>
-            
-            <!-- Botão para Configuração -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='configuração.html'">
                 <i class="fas fa-cog"></i><span>Configuração</span>
             </a>
-            
-            <!-- Botão para Suporte -->
             <a class="menu-item" href="javascript:void(0)" onclick="window.location.href='suporte.html'">
                 <i class="fas fa-headset"></i><span>Suporte</span>
             </a>
-            
-            <!-- Botão para Sair (com confirmação) -->
             <a class="menu-item" href="javascript:void(0)" onclick="if(confirm('Tem certeza que deseja sair?')) window.location.href='login.html'">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
@@ -75,24 +57,29 @@
     </div>
 
     <div class="dashboard">
-        <!-- Card Saldo -->
+        <!-- Card Saldo com botão de ocultar -->
         <div class="card grid-full">
             <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
                 <div style="display: flex; flex-wrap: wrap; gap: 2rem;">
                     <div>
                         <div class="text-muted"><i class="fas fa-wallet"></i> Saldo atual</div>
-                        <div class="value-large">R$ 12.500,00</div>
+                        <div class="value-large valor-financeiro" id="saldoAtual">R$ 0,00</div>
                     </div>
                     <div>
                         <div class="text-muted"><i class="fas fa-arrow-up"></i> Receita hoje</div>
-                        <div class="value-medium" id="receitaHoje">R$ 2.300,00</div>
+                        <div class="value-medium valor-financeiro" id="receitaHoje">R$ 0,00</div>
                     </div>
                     <div>
                         <div class="text-muted"><i class="fas fa-arrow-down"></i> Despesas hoje</div>
-                        <div class="value-medium">R$ 850,00</div>
+                        <div class="value-medium valor-financeiro" id="despesasHoje">R$ 0,00</div>
                     </div>
                 </div>
-                <div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <!-- Botão discreto para ocultar valores -->
+                    <button class="btn-ocultar" id="toggleOcultar" title="Ocultar/Mostrar valores financeiros">
+                        <i class="fas fa-eye" id="iconeOlho"></i>
+                        <span id="textoOcultar">Ocultar</span>
+                    </button>
                     <span class="badge"><i class="fas fa-chart-line"></i> Última atualização: hoje</span>
                 </div>
             </div>
@@ -128,25 +115,25 @@
                     </div>
                     <div class="card-metrica">
                         <i class="fas fa-chart-line" style="font-size: 1.4rem; color:#1e4f8a;"></i>
-                        <div class="metrica-valor">R$ 287,00</div>
+                        <div class="metrica-valor valor-financeiro" id="ticketMedio">R$ 287,00</div>
                         <div class="metrica-label">Ticket Médio</div>
                         <small style="color:#3b82f6;"><i class="fas fa-chart-simple"></i> +5%</small>
                     </div>
                 </div>
                 
                 <!-- Métricas financeiras rápidas -->
-                <div class="financas-rapidas">
-                    <div><i class="fas fa-chart-pie"></i> <strong>Margem Lucro:</strong> 32% <span style="color:#10b981;"><i class="fas fa-trend-up"></i> +2%</span></div>
-                    <div><i class="fas fa-calendar-week"></i> <strong>Meta Semanal:</strong> R$ 7.500 / R$ 9.000</div>
+                <div class="financas-rapidas" id="financasRapidas">
+                    <div><i class="fas fa-chart-pie"></i> <strong>Margem Lucro:</strong> <span class="valor-financeiro">32%</span> <span style="color:#10b981;"><i class="fas fa-trend-up"></i> +2%</span></div>
+                    <div><i class="fas fa-calendar-week"></i> <strong>Meta Semanal:</strong> <span class="valor-financeiro">R$ 7.500</span> / <span class="valor-financeiro">R$ 9.000</span></div>
                     <div><i class="fas fa-percent"></i> <strong>Conversão:</strong> 68% <i class="fas fa-check-circle" style="color:#10b981;"></i></div>
-                    <div><i class="fas fa-charging-station"></i> <strong>Projeção Mês:</strong> R$ 28.400</div>
+                    <div><i class="fas fa-charging-station"></i> <strong>Projeção Mês:</strong> <span class="valor-financeiro">R$ 28.400</span></div>
                 </div>
                 
                 <!-- GRÁFICO DE METAS E PROGRESSO (integrado e robusto) -->
                 <div class="meta-container">
                     <div class="meta-header">
                         <span class="meta-title"><i class="fas fa-chart-simple"></i> Meta Mensal de Receita</span>
-                        <span class="meta-value" id="metaValorExibido">R$ 30.000</span>
+                        <span class="meta-value valor-financeiro" id="metaValorExibido">R$ 0,0</span>
                     </div>
                     
                     <!-- Gráfico Circular -->
@@ -170,9 +157,9 @@
                     </div>
                     
                     <!-- Valores Atuais -->
-                    <div class="meta-values-row">
-                        <div><span class="text-muted"><i class="fas fa-coins"></i> Arrecadado:</span> <strong id="receitaAtual">R$ 18.500</strong></div>
-                        <div><span class="text-muted"><i class="fas fa-hourglass-half"></i> Faltam:</span> <strong id="faltandoMeta">R$ 11.500</strong></div>
+                    <div class="meta-values-row" id="metaValuesRow">
+                        <div><span class="text-muted"><i class="fas fa-coins"></i> Arrecadado:</span> <strong class="valor-financeiro" id="receitaAtual">R$ 18.500</strong></div>
+                        <div><span class="text-muted"><i class="fas fa-hourglass-half"></i> Faltam:</span> <strong class="valor-financeiro" id="faltandoMeta">R$ 11.500</strong></div>
                     </div>
                     
                     <!-- Controles dinâmicos -->
@@ -209,7 +196,59 @@
         </div>
     </div>
 
+    <style>
+
+    </style>
+
     <script>
+        // ==================== CONTROLE DE OCULTAR VALORES ====================
+        let valoresOcultos = false;
+        const toggleBtn = document.getElementById('toggleOcultar');
+        const iconeOlho = document.getElementById('iconeOlho');
+        const textoOcultar = document.getElementById('textoOcultar');
+        
+        // Função para ocultar ou mostrar valores financeiros
+        function toggleOcultarValores() {
+            valoresOcultos = !valoresOcultos;
+            
+            // Seleciona todos os elementos com a classe 'valor-financeiro'
+            const elementosFinanceiros = document.querySelectorAll('.valor-financeiro');
+            
+            elementosFinanceiros.forEach(el => {
+                if (valoresOcultos) {
+                    // Armazena o valor original se ainda não foi salvo
+                    if (!el.dataset.valorOriginal) {
+                        el.dataset.valorOriginal = el.textContent;
+                    }
+                    // Oculta o valor
+                    el.textContent = '••••••';
+                    el.style.letterSpacing = '2px';
+                    el.style.fontWeight = '700';
+                } else {
+                    // Restaura o valor original
+                    if (el.dataset.valorOriginal) {
+                        el.textContent = el.dataset.valorOriginal;
+                        el.style.letterSpacing = 'normal';
+                        el.style.fontWeight = '';
+                    }
+                }
+            });
+            
+            // Atualiza o ícone e texto do botão
+            if (valoresOcultos) {
+                iconeOlho.className = 'fas fa-eye-slash';
+                textoOcultar.textContent = 'Mostrar';
+                toggleBtn.classList.add('oculto');
+            } else {
+                iconeOlho.className = 'fas fa-eye';
+                textoOcultar.textContent = 'Ocultar';
+                toggleBtn.classList.remove('oculto');
+            }
+        }
+        
+        // Adiciona evento de clique ao botão
+        toggleBtn.addEventListener('click', toggleOcultarValores);
+
         // ==================== METAS E PROGRESSO ====================
         let metaMensal = 30000;
         let receitaAtual = 18500;
@@ -225,7 +264,10 @@
         const achievementMessage = document.getElementById('achievementMessage');
         const achievementText = document.getElementById('achievementText');
         const receitaHojeSpan = document.getElementById('receitaHoje');
+        const despesasHojeSpan = document.getElementById('despesasHoje');
         const vendasHojeSpan = document.getElementById('vendasHoje');
+        const saldoAtualSpan = document.getElementById('saldoAtual');
+        const ticketMedioSpan = document.getElementById('ticketMedio');
         
         const circumference = 408.4;
         
@@ -252,13 +294,59 @@
             const offset = circumference - (percentual / 100) * circumference;
             if (progressCircle) progressCircle.style.strokeDashoffset = offset;
             if (progressPercent) progressPercent.textContent = `${Math.round(percentual)}%`;
-            if (metaValorExibido) metaValorExibido.textContent = `R$ ${metaMensal.toLocaleString()}`;
-            if (receitaAtualSpan) receitaAtualSpan.textContent = `R$ ${receitaAtual.toLocaleString()}`;
-            const faltando = metaMensal - receitaAtual;
-            if (faltandoMetaSpan) faltandoMetaSpan.textContent = `R$ ${faltando > 0 ? faltando.toLocaleString() : '0'}`;
             
+            const metaFormatada = `R$ ${metaMensal.toLocaleString()}`;
+            if (metaValorExibido) {
+                metaValorExibido.textContent = metaFormatada;
+                metaValorExibido.dataset.valorOriginal = metaFormatada;
+            }
+            
+            const receitaFormatada = `R$ ${receitaAtual.toLocaleString()}`;
+            if (receitaAtualSpan) {
+                receitaAtualSpan.textContent = receitaFormatada;
+                receitaAtualSpan.dataset.valorOriginal = receitaFormatada;
+            }
+            
+            const faltando = metaMensal - receitaAtual;
+            const faltandoFormatado = `R$ ${faltando > 0 ? faltando.toLocaleString() : '0'}`;
+            if (faltandoMetaSpan) {
+                faltandoMetaSpan.textContent = faltandoFormatado;
+                faltandoMetaSpan.dataset.valorOriginal = faltandoFormatado;
+            }
+            
+            // Atualiza Saldo
+            const despesas = 3200;
+            const saldo = receitaAtual - despesas;
+            const saldoFormatado = `R$ ${saldo.toLocaleString()}`;
+            if (saldoAtualSpan) {
+                saldoAtualSpan.textContent = saldoFormatado;
+                saldoAtualSpan.dataset.valorOriginal = saldoFormatado;
+            }
+            
+            // Atualiza Receita Hoje
             const receitaHojeSimulada = Math.min(receitaAtual * 0.12, receitaAtual);
-            if (receitaHojeSpan) receitaHojeSpan.textContent = `R$ ${receitaHojeSimulada.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            const receitaHojeFormatada = `R$ ${receitaHojeSimulada.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            if (receitaHojeSpan) {
+                receitaHojeSpan.textContent = receitaHojeFormatada;
+                receitaHojeSpan.dataset.valorOriginal = receitaHojeFormatada;
+            }
+            
+            // Atualiza Despesas Hoje
+            const despesasHoje = despesas * 0.08;
+            const despesasHojeFormatada = `R$ ${despesasHoje.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            if (despesasHojeSpan) {
+                despesasHojeSpan.textContent = despesasHojeFormatada;
+                despesasHojeSpan.dataset.valorOriginal = despesasHojeFormatada;
+            }
+            
+            // Atualiza Ticket Médio
+            const ticket = receitaAtual / 65;
+            const ticketFormatado = `R$ ${ticket.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            if (ticketMedioSpan) {
+                ticketMedioSpan.textContent = ticketFormatado;
+                ticketMedioSpan.dataset.valorOriginal = ticketFormatado;
+            }
+            
             const vendasEstimadas = Math.max(8, Math.round(receitaAtual / 880));
             if (vendasHojeSpan) vendasHojeSpan.textContent = vendasEstimadas;
             

@@ -18,33 +18,30 @@ USE `tcc_3tdsa`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `produto`
+-- Table structure for table `notificacao`
 --
 
-DROP TABLE IF EXISTS `produto`;
+DROP TABLE IF EXISTS `notificacao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `produto` (
-  `nome_produto` varchar(100) NOT NULL,
-  `categoria_produto` varchar(20) NOT NULL,
-  `marca` varchar(20) DEFAULT NULL,
-  `estoque_atual` int DEFAULT NULL,
-  `id_produto` int NOT NULL AUTO_INCREMENT,
-  `preço_at` float NOT NULL,
-  `preço_vrj` float NOT NULL,
-  `preço_custo` float NOT NULL,
-  PRIMARY KEY (`id_produto`)
+CREATE TABLE `notificacao` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) DEFAULT NULL,
+  `mensagem` text,
+  `lida` tinyint(1) DEFAULT '0',
+  `data_criacao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `produto`
+-- Dumping data for table `notificacao`
 --
 
-LOCK TABLES `produto` WRITE;
-/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
-INSERT INTO `produto` VALUES ('Mouse','Informatica','HP',10,1,10,10.5,6);
-/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
+LOCK TABLES `notificacao` WRITE;
+/*!40000 ALTER TABLE `notificacao` DISABLE KEYS */;
+INSERT INTO `notificacao` VALUES (1,'tdsatcc@gmail.com','Teste de notificação: O sistema está conectado!',1,'2026-07-22 13:19:54');
+/*!40000 ALTER TABLE `notificacao` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-29  8:22:51
+-- Dump completed on 2026-07-29  8:22:52

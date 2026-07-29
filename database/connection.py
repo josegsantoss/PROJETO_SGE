@@ -5,7 +5,7 @@ def get_connection():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="passarinhoboludo123", # <--- Tem que ser a senha força 100 que criamos!
+            password="root", # <--- Tem que ser a senha força 100 que criamos!
             database="tcc_3tdsa"           # <--- O nome do banco de dados do seu TCC
         )
         return conn

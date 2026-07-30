@@ -5,10 +5,10 @@ def get_connection():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="root", # <--- Tem que ser a senha força 100 que criamos!
-            database="tcc_3tdsa"           # <--- O nome do banco de dados do seu TCC
+            password="root123", 
+            database="tcc_3tdsa"           
         )
         return conn
     except Exception as e:
         print(f"Erro ao conectar: {e}")
-        return None # É por causa deste None que o erro apareceu!
+        return None

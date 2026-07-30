@@ -11,7 +11,6 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'uma_chave_super_secreta_e_dificil'
 
-# Inicialização do APScheduler
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
@@ -43,7 +42,6 @@ def enviar_email_relatorio(destinatario):
     cursor = conn.cursor(dictionary=True)
 
     try:
-        # Vendas
         try:
             cursor.execute("""
                 SELECT COUNT(*) as total_vendas, 
@@ -55,14 +53,12 @@ def enviar_email_relatorio(destinatario):
         except:
             vendas = {'total_vendas': 0, 'faturamento': 0}
 
-        # Produtos
         try:
             cursor.execute("SELECT COUNT(*) as total_produtos FROM produtos")
             produtos = cursor.fetchone() or {'total_produtos': 0}
         except:
             produtos = {'total_produtos': 0}
 
-        # Consertos
         try:
             cursor.execute("""
                 SELECT COUNT(*) as total_consertos 
@@ -73,7 +69,6 @@ def enviar_email_relatorio(destinatario):
         except:
             consertos = {'total_consertos': 0}
 
-        # Top 5 Produtos (seguro)
         top_produtos_html = "<li>Nenhuma venda registrada esta semana.</li>"
         try:
             cursor.execute("""
@@ -260,7 +255,6 @@ def menu():
         from datetime import datetime
         dia_atual = datetime.now().day
 
-        # 1. Saldo atual (Tudo) e Receita Hoje
         cursor.execute("SELECT COALESCE(SUM(valor_total), 0) as saldo_total FROM vendas")
         saldo_atual = float((cursor.fetchone() or {})['saldo_total'] or 0.0)
 
@@ -269,21 +263,18 @@ def menu():
         receita_hoje = float(res_vendas_hoje['receita_hoje'])
         vendas_hoje = int(res_vendas_hoje['qtd_hoje'])
 
-        # 2. Despesas Hoje
         try:
             cursor.execute("SELECT COALESCE(SUM(valor), 0) as despesa_hoje FROM despesas WHERE DATE(data_despesa) = CURDATE()")
             despesa_hoje = float((cursor.fetchone() or {})['despesa_hoje'] or 0.0)
         except:
             despesa_hoje = 0.0
 
-        # 3. Serviços Hoje (Consertos)
         try:
             cursor.execute("SELECT COUNT(id) as qtd_servicos FROM conserto WHERE DATE(data_fim) = CURDATE() OR DATE(data_inicio) = CURDATE()")
             servicos_hoje = int((cursor.fetchone() or {})['qtd_servicos'] or 0)
         except:
             servicos_hoje = 0
 
-        # 4. Receita e Despesas do Mês (Para Margem de Lucro e Projeção)
         cursor.execute("SELECT COALESCE(SUM(valor_total), 0) as receita_mes FROM vendas WHERE MONTH(data_venda) = MONTH(CURDATE()) AND YEAR(data_venda) = YEAR(CURDATE())")
         receita_mes = float((cursor.fetchone() or {})['receita_mes'] or 0.0)
 
@@ -293,7 +284,6 @@ def menu():
         except:
             despesa_mes = 0.0
 
-        # 5. Meta Mensal
         try:
             cursor.execute("SELECT meta_mensal FROM configuracoes WHERE id = 1")
             meta = cursor.fetchone()
@@ -303,22 +293,16 @@ def menu():
 
         # ======= CÁLCULOS DOS INDICADORES =======
         
-        # Clientes Atendidos: Aproximação (Vendas + Serviços)
         clientes_atendidos = vendas_hoje + servicos_hoje
         
-        # Ticket Médio = Receita de hoje / Quantidade de vendas de hoje
         ticket_medio = (receita_hoje / vendas_hoje) if vendas_hoje > 0 else 0.0
         
-        # Margem de Lucro do Mês = ((Receita - Despesa) / Receita) * 100
         margem_lucro = ((receita_mes - despesa_mes) / receita_mes * 100) if receita_mes > 0 else 0.0
         
-        # Projeção do Mês = Média diária de receita multiplicada por 30 dias
         projecao_mes = (receita_mes / dia_atual) * 30 if dia_atual > 0 else 0.0
 
-        # Conversão (Aproximação: Clientes que compraram vs Clientes totais)
-        conversao = 100 if vendas_hoje > 0 else 0 # Personalize se tiver tabela de orçamentos recusados
-
-        # Formatação das variáveis
+        conversao = 100 if vendas_hoje > 0 else 0 
+        
         def formata_br(valor):
             return f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
 
@@ -418,12 +402,10 @@ def api_notificacoes():
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     try:
-        # Se você não tem uma tabela 'notificacoes', esta linha dará erro. 
-        # Veja a observação abaixo.
         cursor.execute("SELECT * FROM notificacoes WHERE lida = 0 ORDER BY id DESC")
         return jsonify(cursor.fetchall())
     except:
-        return jsonify([]) # Retorna lista vazia se a tabela não existir
+        return jsonify([])
     finally:
         cursor.close()
         conn.close()

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo - Venda #{{ venda.id_venda }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+        }
+        .recibo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .empresa-info h1 { margin: 0 0 5px 0; font-size: 24px; color: #0f172a; }
+        .empresa-info p { margin: 0; color: #64748b; font-size: 14px; }
+        .venda-info { text-align: right; }
+        .venda-info h2 { margin: 0; color: #0284c7; font-size: 28px; }
+        .venda-info p { margin: 5px 0 0 0; color: #64748b; font-size: 14px; }
+        
+        .cliente-info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .cliente-info h3 { margin: 0 0 10px 0; font-size: 16px; color: #334155; }
+        .cliente-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            font-size: 14px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        
+        .totais-container {
+            width: 300px;
+            float: right;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .total-linha {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .total-linha.final {
+            background-color: #0284c7;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: none;
+        }
+        
+        .clear { clear: both; }
+        
+        .acoes-impressao {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { background: #0284c7; }
+
+        /* REGRAS DE IMPRESSÃO (Oculta botões e ajusta tamanho ao salvar em PDF) */
+        @media print {
+            body { background: white; padding: 0; }
+            .recibo-container { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            .acoes-impressao { display: none; } /* Some com o botão de imprimir */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="acoes-impressao">
+        <button class="btn" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> Salvar como PDF / Imprimir
+        </button>
+    </div>
+
+    <div class="recibo-container">
+        <div class="header">
+            <div class="empresa-info">
+                <h1>Gestão Inteligente</h1>
+                <p>CNPJ: 00.000.000/0001-00</p>
+                <p>contato@empresa.com.br</p>
+            </div>
+            <div class="venda-info">
+                <h2>RECIBO #{{ venda.id_venda }}</h2>
+                <p>Data: {{ venda.data_venda.strftime('%d/%m/%Y %H:%M') if venda.data_venda else '-' }}</p>
+            </div>
+        </div>
+
+        <div class="cliente-info">
+            <h3><i class="fas fa-user"></i> Dados do Cliente</h3>
+            <div class="cliente-grid">
+                <div><strong>Nome:</strong> {{ venda.cliente_nome }}</div>
+                <div><strong>Documento:</strong> {{ venda.cliente_documento or 'Não informado' }}</div>
+                <div><strong>Telefone:</strong> {{ venda.cliente_telefone or 'Não informado' }}</div>
+                <div><strong>E-mail:</strong> {{ venda.cliente_email or 'Não informado' }}</div>
+                <div style="grid-column: span 2;"><strong>Endereço:</strong> {{ venda.cliente_endereco or 'Não informado' }}</div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 5%;">#</th>
+                    <th style="width: 50%;">Descrição do Produto</th>
+                    <th class="text-center" style="width: 15%;">Qtd</th>
+                    <th class="text-right" style="width: 15%;">Valor Unit.</th>
+                    <th class="text-right" style="width: 15%;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.nome_produto }}</td>
+                    <td class="text-center">{{ item.quantidade }}</td>
+                    <td class="text-right">R$ {{ "%.2f"|format(item.preco_unitario) }}</td>
+                    <td class="text-right">R$ {{ "%.2f"|format(item.total_item) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="width: 50%;">
+                <p style="margin: 0; font-size: 14px; color: #64748b;"><strong>Forma de Pagamento:</strong><br> {{ venda.forma_pagamento }}</p>
+            </div>
+            
+            <div class="totais-container">
+                <div class="total-linha">
+                    <span>Subtotal</span>
+                    <span>R$ {{ "%.2f"|format(venda.subtotal) }}</span>
+                </div>
+                <div class="total-linha">
+                    <span>Desconto</span>
+                    <span style="color: #ef4444;">- R$ {{ "%.2f"|format(venda.desconto) }}</span>
+                </div>
+                <div class="total-linha final">
+                    <span>Total Pago</span>
+                    <span>R$ {{ "%.2f"|format(venda.total) }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div style="margin-top: 50px; text-align: center; border-top: 1px dashed #cbd5e1; padding-top: 20px; color: #64748b; font-size: 13px;">
+            <p>Obrigado pela preferência!</p>
+            <p>Este documento não é um documento fiscal válido (NFe), servindo apenas como controle interno e recibo de entrega/pagamento.</p>
+        </div>
+    </div>
+
+</body>
+</html>

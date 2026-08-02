@@ -66,6 +66,10 @@
                 <i class="fas fa-headset"></i><span>Suporte</span>
             </a>
             
+            <a class="menu-item" href="#" onclick="toggleTheme(event)">
+                <i class="fas fa-moon" id="theme-icon"></i><span id="theme-text">Tema Escuro</span>
+            </a>
+            
             <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
@@ -73,7 +77,6 @@
     </div>
 
     <div class="dashboard">
-        <!-- Título -->
         <div class="card grid-full">
             <div class="card-header">
                 <i class="fas fa-cog"></i>
@@ -84,7 +87,6 @@
             </div>
         </div>
 
-        <!-- Perfil da Empresa -->
         <div class="card grid-half">
             <div class="card-header">
                 <i class="fas fa-building"></i>
@@ -118,7 +120,6 @@
             </div>
         </div>
 
-        <!-- Preferências do Sistema -->
         <div class="card grid-half">
             <div class="card-header">
                 <i class="fas fa-sliders-h"></i>
@@ -165,40 +166,7 @@
             </div>
         </div>
 
-        <!-- Aparência -->
-        <div class="card grid-half">
-            <div class="card-header">
-                <i class="fas fa-palette"></i>
-                <h3>Aparência</h3>
-            </div>
-            <div class="tema-options">
-                <div class="tema-btn active" data-tema="claro">
-                    <i class="fas fa-sun"></i>
-                    <span>Claro</span>
-                </div>
-                <div class="tema-btn" data-tema="escuro">
-                    <i class="fas fa-moon"></i>
-                    <span>Escuro</span>
-                </div>
-                <div class="tema-btn" data-tema="auto">
-                    <i class="fas fa-laptop"></i>
-                    <span>Automático</span>
-                </div>
-            </div>
-            <div class="form-row margin-top-1rem">
-                <div class="input-group">
-                    <label><i class="fas fa-font"></i> Tamanho da Fonte</label>
-                    <select id="fontSize">
-                        <option value="pequeno">Pequeno</option>
-                        <option value="medio" selected>Médio</option>
-                        <option value="grande">Grande</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Segurança -->
-        <div class="card grid-half">
+        <div class="card grid-full">
             <div class="card-header">
                 <i class="fas fa-shield-alt"></i>
                 <h3>Segurança</h3>
@@ -208,14 +176,10 @@
                     <label><i class="fas fa-key"></i> Alterar Senha</label>
                     <input type="password" id="novaSenha" placeholder="Nova senha">
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="input-group">
                     <label><i class="fas fa-check-circle"></i> Confirmar Senha</label>
                     <input type="password" id="confirmarSenha" placeholder="Confirme a nova senha">
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="input-group">
                     <label><i class="fas fa-database"></i> Backup dos Dados</label>
                     <select id="backupFrequencia">
@@ -227,7 +191,6 @@
             </div>
         </div>
 
-        <!-- Ações -->
         <div class="card grid-full">
             <div class="actions-bar">
                 <button id="btnCancelar" class="outline"><i class="fas fa-times"></i> Cancelar</button>
@@ -346,6 +309,42 @@
         }
         
         document.addEventListener('DOMContentLoaded', carregarConfiguracoes);
+
+        // ==================== SISTEMA DE TEMA ESCURO ====================
+        function toggleTheme(event) {
+            if(event) event.preventDefault();
+            
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                if(icon) icon.className = 'fas fa-moon';
+                if(text) text.textContent = 'Tema Escuro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                if(icon) icon.className = 'fas fa-sun';
+                if(text) text.textContent = 'Tema Claro';
+            }
+        }
+
+        // Aplica o tema imediatamente ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                const icon = document.getElementById('theme-icon');
+                const text = document.getElementById('theme-text');
+                if (icon && text) {
+                    icon.className = 'fas fa-sun';
+                    text.textContent = 'Tema Claro';
+                }
+            }
+        });
     </script>
 </body>
 </html>

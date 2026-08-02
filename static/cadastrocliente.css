@@ -242,12 +242,21 @@ header {
   background-color: #64748b;
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 14px 24px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  margin-top: 20px;
-  float: right;
+  margin-top: 25px;
+  
+  /* Aqui está a mágica para ocupar a tela toda */
+  width: 100%;
+  display: block;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.exportar:hover {
+  background-color: #475569;
 }
 
 /* Clientes Cadastrados */
@@ -307,4 +316,88 @@ th {
   .novo-cliente h2 { font-size: 36px; }
   .form-grid { grid-template-columns: 1fr; }
   .search-input { width: 100%; }
+}
+
+
+/* =========================================
+   TEMA ESCURO (DARK MODE) - CADASTRO DE CLIENTES
+   ========================================= */
+
+/* Escurece as caixas principais de fundo branco */
+/* Escurece o Menu Lateral */
+[data-theme="dark"] .side-menu {
+    background-color: #0f172a;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+}
+[data-theme="dark"] .menu-item { color: #cbd5e1; }
+[data-theme="dark"] .menu-item:hover { background-color: #1e293b; border-left-color: #3b82f6; }
+[data-theme="dark"] .menu-divider { background: #334155; }
+[data-theme="dark"] .menu-header { background: #0b1a30; }
+[data-theme="dark"] .novo-cliente,
+[data-theme="dark"] .clientes-cadastrados {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Clareia os títulos e os nomes dos campos (labels) */
+[data-theme="dark"] .novo-cliente h2,
+[data-theme="dark"] .clientes-header h3,
+[data-theme="dark"] .form-group label,
+[data-theme="dark"] .radio-group {
+    color: #f8fafc !important;
+}
+
+/* Ajusta as cores da Tabela de Clientes */
+[data-theme="dark"] table th {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
+    border-bottom: 2px solid #334155 !important;
+}
+
+[data-theme="dark"] table td {
+    color: #f8fafc !important;
+    border-bottom-color: #334155 !important;
+}
+
+[data-theme="dark"] tr:hover {
+    background-color: #334155 !important;
+}
+
+/* Ajusta a cor do botão de Exportar */
+[data-theme="dark"] .exportar {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .exportar:hover {
+    background-color: #475569 !important;
+}
+
+/* Escurece os Campos de Entrada (Inputs) e a Barra de Pesquisa */
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .search-input {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* Cor quando clica no campo (Focus) */
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .search-input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Cor do texto de exemplo (Placeholder) */
+[data-theme="dark"] .form-group input::placeholder,
+[data-theme="dark"] .search-input::placeholder {
+    color: #64748b !important;
+}
+
+/* Campo de ID bloqueado (Readonly) */
+[data-theme="dark"] .input-disabled {
+    background-color: #1e293b !important;
+    color: #94a3b8 !important;
 }

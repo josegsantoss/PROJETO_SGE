@@ -6,7 +6,6 @@
     <title>Extrato Financeiro - Dashboard Completo</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='extrato.css') }}">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -71,6 +70,10 @@
                 <i class="fas fa-headset"></i><span>Suporte</span>
             </a>
             
+            <a class="menu-item" href="#" onclick="toggleTheme(event)">
+                <i class="fas fa-moon" id="theme-icon"></i><span id="theme-text">Tema Escuro</span>
+            </a>
+            
             <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
@@ -82,23 +85,20 @@
         <header class="header">
             <h1><i class="fas fa-chart-line"></i> Extrato Financeiro</h1>
             <div class="date-selector">
-                <input type="date" id="dateFilter" class="date-input" value="2026-03-28">
                 <div style="color: var(--text-light); font-size: 14px;">
-                    <i class="far fa-clock"></i> <span id="lastUpdate">28/03/2026 11:41</span>
+                    <i class="far fa-clock"></i> Atualizado hoje às <span id="lastUpdate">--:--</span>
                 </div>
             </div>
         </header>
 
-        <div class="stats-grid" id="statsGrid">
-            </div>
+        <div class="stats-grid" id="statsGrid"></div>
 
         <div class="charts-row">
             <div class="chart-card">
                 <h3><i class="fas fa-chart-pie"></i> Composição dos Ganhos</h3>
                 <div class="donut-container">
                     <canvas id="donutChart" width="250" height="250"></canvas>
-                    <div class="chart-stats" id="chartStats">
-                        </div>
+                    <div class="chart-stats" id="chartStats"></div>
                 </div>
             </div>
             
@@ -108,15 +108,12 @@
             </div>
         </div>
 
-        <div class="goal-container" id="goalContainer">
-            </div>
-
         <div class="transactions">
             <div class="trans-header">
-                <h3 style="margin: 0;"><i class="fas fa-list"></i> Transações • <span id="currentDate">28/03/2026</span></h3>
+                <h3 style="margin: 0;"><i class="fas fa-list"></i> Histórico de Transações</h3>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <div class="search-box">
-                        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar descrição ou produto...">
+                        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Buscar descrição...">
                         <i class="fas fa-search"></i>
                     </div>
                     <div class="filter-group">
@@ -139,51 +136,52 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    </tbody>
+                    {% if transacoes %}
+                        {% for t in transacoes %}
+                        <tr>
+                            <td>
+                                <span class="cat-badge" style="background: #e6f4ea; color: #137333; padding: 4px 10px; border-radius: 20px; font-weight: 500;">
+                                    {{ t.categoria }}
+                                </span>
+                            </td>
+                            <td><strong>{{ t.descricao }}</strong></td>
+                            <td style="color: #137333; font-weight: 600;">
+                                R$ {{ "%.2f" | format(t.valor) }}
+                            </td>
+                            <td><i class="far fa-clock"></i> {{ t.hora or '--:--' }}</td>
+                            <td>
+                                <span style="padding: 3px 10px; border-radius: 12px; background: #e8f5e9; color: #2e7d32; font-size: 12px; font-weight: 500;">
+                                    {{ t.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #94a3b8; padding: 30px;">
+                                <i class="fas fa-folder-open" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
+                                Nenhuma transação registada no banco de dados.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
             </table>
-            <div class="summary-bar" id="tableSummary">
-                </div>
-            <div class="export-btns">
-                <button class="btn btn-pdf" onclick="exportToPDF()"><i class="far fa-file-pdf"></i> Exportar PDF</button>
-                <button class="btn btn-excel" onclick="exportToExcel()"><i class="far fa-file-excel"></i> Exportar Excel</button>
-            </div>
+            <div class="summary-bar" id="tableSummary"></div>
         </div>
 
     </div>
-
     <script>
-        let transactionsData = [
-            { categoria: "Vendas", descricao: "Kit de Ferramentas Profissional", valor: 489.90, hora: "11:30", status: "Concluído" },
-            { categoria: "Serviços", descricao: "Instalação de Ar Condicionado", valor: 320.00, hora: "11:15", status: "Concluído" },
-            { categoria: "Vendas", descricao: "3x Camisetas Básicas", valor: 119.70, hora: "10:50", status: "Concluído" },
-            { categoria: "Serviços", descricao: "Manutenção Preventiva em Motor", valor: 450.00, hora: "10:25", status: "Concluído" },
-            { categoria: "Vendas", descricao: "Parafusos e Porcas Industrial", valor: 280.00, hora: "09:55", status: "Concluído" },
-            { categoria: "Vendas", descricao: "Furadeira de Impacto", valor: 350.00, hora: "09:30", status: "Concluído" },
-            { categoria: "Serviços", descricao: "Consultoria Técnica", valor: 500.00, hora: "09:00", status: "Concluído" },
-            { categoria: "Vendas", descricao: "Lâmpadas LED (lote)", valor: 180.00, hora: "08:45", status: "Concluído" },
-            { categoria: "Vendas", descricao: "Carregador Portátil", valor: 89.90, hora: "08:30", status: "Concluído" },
-            { categoria: "Serviços", descricao: "Manutenção de Computador", valor: 250.00, hora: "08:15", status: "Concluído" },
-            { categoria: "Vendas", descricao: "Monitor LED 24''", valor: 850.00, hora: "14:30", status: "Pendente" },
-            { categoria: "Serviços", descricao: "Desenvolvimento Web", valor: 1200.00, hora: "15:45", status: "Pendente" }
-        ];
-
-        let totalGastos = 1200.00;
-        let metaDiaria = 5000.00;
-        let totalVendas = 0;
-        let totalServicos = 0;
+        // Pegando os totais diretamente calculados no Python
+        let totalVendas = Number("{{ total_vendas | default(0) }}");
+        let totalServicos = Number("{{ total_servicos | default(0) }}");
+        let totalGastos = 0.00;
+        let qtdTransacoes = Number("{{ qtd_transacoes | default(0) }}");
         let donutChart, trendChart;
 
-        function calculateTotals() {
-            totalVendas = transactionsData.filter(t => t.categoria === "Vendas").reduce((sum, t) => sum + t.valor, 0);
-            totalServicos = transactionsData.filter(t => t.categoria === "Serviços").reduce((sum, t) => sum + t.valor, 0);
-        }
-
         function updateStats() {
-            calculateTotals();
             const totalGeral = totalVendas + totalServicos;
             const lucroLiquido = totalGeral - totalGastos;
-            const ticketMedio = totalVendas / transactionsData.filter(t => t.categoria === "Vendas").length;
-            const percentChange = ((totalGeral - 4330) / 4330 * 100).toFixed(1);
+            const ticketMedio = qtdTransacoes > 0 ? (totalVendas / qtdTransacoes) : 0;
             
             const statsGrid = document.getElementById('statsGrid');
             if (statsGrid) {
@@ -191,32 +189,35 @@
                     <div class="card">
                         <div class="card-label"><i class="fas fa-chart-simple"></i> Total Geral</div>
                         <div class="card-value">R$ ${totalGeral.toFixed(2)}</div>
-                        <div class="card-sub ${percentChange >= 0 ? 'trend-up' : 'trend-down'}">
-                            <i class="fas fa-arrow-${percentChange >= 0 ? 'up' : 'down'}"></i> ${Math.abs(percentChange)}% em relação a ontem
+                        <div class="card-sub trend-up">
+                            <i class="fas fa-arrow-up"></i> Dados atualizados do banco
                         </div>
                     </div>
                     <div class="card">
                         <div class="card-label"><i class="fas fa-dollar-sign"></i> Ganhos Hoje</div>
                         <div class="card-value">R$ ${totalGeral.toFixed(2)}</div>
-                        <div class="card-sub">${transactionsData.length} transações realizadas</div>
+                        <div class="card-sub">${qtdTransacoes} transações realizadas</div>
                     </div>
                     <div class="card">
-                        <div class="card-label"><i class="fas fa-shopping-cart"></i> Vendas</div>
-                        <div class="card-value">${transactionsData.filter(t => t.categoria === "Vendas").length}</div>
+                        <div class="card-label"><i class="fas fa-shopping-cart"></i> Vendas & Serviços</div>
+                        <div class="card-value">${qtdTransacoes}</div>
                         <div class="card-sub">Ticket Médio: R$ ${ticketMedio.toFixed(2)}</div>
                     </div>
                     <div class="card">
                         <div class="card-label"><i class="fas fa-receipt"></i> Lucro Líquido</div>
                         <div class="card-value">R$ ${lucroLiquido.toFixed(2)}</div>
-                        <div class="card-sub trend-down"><i class="fas fa-arrow-down"></i> Gastos: R$ ${totalGastos.toFixed(2)}</div>
+                        <div class="card-sub">Gastos: R$ ${totalGastos.toFixed(2)}</div>
                     </div>
                 `;
             }
         }
 
         function updateDonutChart() {
-            const vendasPercent = (totalVendas / (totalVendas + totalServicos) * 100).toFixed(1);
-            const servicosPercent = (totalServicos / (totalVendas + totalServicos) * 100).toFixed(1);
+            const totalGeral = totalVendas + totalServicos;
+            if (totalGeral === 0) return;
+
+            const vendasPercent = ((totalVendas / totalGeral) * 100).toFixed(1);
+            const servicosPercent = ((totalServicos / totalGeral) * 100).toFixed(1);
             
             if (donutChart) donutChart.destroy();
             
@@ -224,6 +225,22 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             
+            // Criação de um efeito de sombra suave para dar profundidade (estilo 3D)
+            const shadowPlugin = {
+                id: 'shadowPlugin',
+                beforeDraw: (chart) => {
+                    const { ctx } = chart;
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+                    ctx.shadowBlur = 12;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 6;
+                },
+                afterDraw: (chart) => {
+                    chart.ctx.restore();
+                }
+            };
+
             donutChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
@@ -231,24 +248,27 @@
                     datasets: [{
                         data: [totalVendas, totalServicos],
                         backgroundColor: ['#0a5d3e', '#1a73e8'],
-                        borderWidth: 0,
-                        hoverOffset: 15
+                        borderWidth: 2,
+                        borderColor: '#ffffff', // Borda limpa para destacar as fatias
+                        hoverOffset: 15,        // Efeito de destaque ao passar o rato
+                        borderRadius: 6         // Arredonda as pontas das fatias
                     }]
                 },
+                plugins: [shadowPlugin],
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const value = context.raw;
-                                    const percent = ((value / (totalVendas + totalServicos)) * 100).toFixed(1);
-                                    return `${context.label}: R$ ${value.toFixed(2)} (${percent}%)`;
-                                }
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: 10
+                    },
+                    plugins: { 
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20
                             }
-                        }
+                        } 
                     }
                 }
             });
@@ -266,49 +286,91 @@
                         <div class="stat-value">R$ ${totalServicos.toFixed(2)}</div>
                         <div style="font-size: 12px; color: #666;">${servicosPercent}% do total</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label"><i class="fas fa-chart-line"></i> Média por Transação</div>
-                        <div class="stat-value">R$ ${((totalVendas + totalServicos) / transactionsData.length).toFixed(2)}</div>
-                    </div>
                 `;
             }
         }
 
+        // GRÁFICO DE LINHAS - EVOLUÇÃO DIÁRIA
+        // GRÁFICO DE LINHAS - EVOLUÇÃO DIÁRIA (Com letras brancas e efeito 3D/Sombra)
         function updateTrendChart() {
-            const ultimosDias = [3250, 3480, 4120, 3890, 4350, 4680, totalVendas + totalServicos];
-            
             if (trendChart) trendChart.destroy();
             
             const canvas = document.getElementById('trendChart');
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             
+            // Tratamento limpo e seguro direto no Jinja
+            const labelsGrafico = JSON.parse('{{ labels_dias | tojson | safe }}' || '["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Hoje"]');
+            const dadosGrafico = JSON.parse('{{ valores_dias | tojson | safe }}' || '[0, 0, 0, 0, 0, 0, 0]');
+            
+            // Plugin para criar um efeito de sombra projetada (estilo 3D) na linha
+            const shadowLinePlugin = {
+                id: 'shadowLinePlugin',
+                beforeDraw: (chart) => {
+                    const { ctx } = chart;
+                    ctx.save();
+                    ctx.shadowColor = 'rgba(0, 230, 118, 0.4)'; // Sombra esverdeada suave na linha
+                    ctx.shadowBlur = 15;
+                    ctx.shadowOffsetX = 0;
+                    ctx.shadowOffsetY = 8;
+                },
+                afterDraw: (chart) => {
+                    chart.ctx.restore();
+                }
+            };
+
             trendChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['22/03', '23/03', '24/03', '25/03', '26/03', '27/03', 'Hoje'],
+                    labels: labelsGrafico,
                     datasets: [{
                         label: 'Ganhos Diários (R$)',
-                        data: ultimosDias,
-                        borderColor: '#0a5d3e',
-                        backgroundColor: 'rgba(10, 93, 62, 0.1)',
-                        tension: 0.4,
+                        data: dadosGrafico,
+                        borderColor: '#00e676', // Verde mais vivo e moderno
+                        backgroundColor: 'rgba(0, 230, 118, 0.15)',
+                        borderWidth: 3,
+                        tension: 0.4, // Curvas suaves
                         fill: true,
-                        pointBackgroundColor: '#1a73e8',
-                        pointBorderColor: '#fff',
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#00e676',
                         pointBorderWidth: 2,
                         pointRadius: 5,
                         pointHoverRadius: 8
                     }]
                 },
+                plugins: [shadowLinePlugin],
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#ffffff' // Letras da legenda em branco
+                            }
+                        }
+                    },
                     scales: {
+                        x: {
+                            ticks: {
+                                color: '#ffffff' // Dias da semana (Seg, Ter...) em branco
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)' // Linhas de fundo bem subtis
+                            }
+                        },
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                callback: function(value) { return 'R$ ' + value.toFixed(0); }
+                                color: '#ffffff', // Números do eixo (R$ 0, R$ 200000...) em branco
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        return 'R$ ' + (value / 1000).toFixed(0) + ' mil';
+                                    }
+                                    return 'R$ ' + value;
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.05)'
                             }
                         }
                     }
@@ -316,115 +378,88 @@
             });
         }
 
-        function updateGoal() {
-            const totalGeral = totalVendas + totalServicos;
-            const percentual = (totalGeral / metaDiaria * 100).toFixed(1);
-            const falta = Math.max(0, metaDiaria - totalGeral);
-            
-            const goalContainer = document.getElementById('goalContainer');
-            if (goalContainer) {
-                goalContainer.innerHTML = `
-                    <div class="goal-header">
-                        <div>
-                            <span class="card-label"><i class="fas fa-bullseye"></i> Meta Diária</span>
-                            <div class="goal-title">R$ ${metaDiaria.toFixed(2)}</div>
-                        </div>
-                        <div class="goal-percent">${percentual}%</div>
-                    </div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" style="width: ${Math.min(percentual, 100)}%;"></div>
-                    </div>
-                    <div class="goal-footer">
-                        <span><i class="fas fa-chart-line"></i> Progresso: R$ ${totalGeral.toFixed(2)}</span>
-                        <span><i class="fas fa-hourglass-half"></i> ${falta > 0 ? `Faltam R$ ${falta.toFixed(2)}` : 'Meta alcançada, Parabéns!'}</span>
-                    </div>
-                `;
-            }
-        }
-
-        function populateTable() {
+        function filterTable() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const categoryFilter = document.getElementById('categoryFilter').value;
+            const rows = document.querySelectorAll('#tableBody tr');
             
-            let filteredData = transactionsData.filter(transacao => {
-                const matchSearch = transacao.descricao.toLowerCase().includes(searchTerm);
-                const matchCategory = categoryFilter === 'all' || transacao.categoria === categoryFilter;
-                return matchSearch && matchCategory;
+            let count = 0;
+            let sumFiltered = 0;
+
+            rows.forEach(row => {
+                if (row.cells.length < 5) return;
+                const categoria = row.cells[0].innerText.trim();
+                const descricao = row.cells[1].innerText.toLowerCase();
+                
+                const matchSearch = descricao.includes(searchTerm);
+                const matchCategory = categoryFilter === 'all' || categoria === categoryFilter;
+                
+                if (matchSearch && matchCategory) {
+                    row.style.display = '';
+                    count++;
+                    const valStr = row.cells[2].innerText.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                    sumFiltered += parseFloat(valStr) || 0;
+                } else {
+                    row.style.display = 'none';
+                }
             });
-            
-            const tableBody = document.getElementById('tableBody');
-            if (!tableBody) return;
-            tableBody.innerHTML = '';
-            
-            filteredData.forEach(transacao => {
-                const row = tableBody.insertRow();
-                row.innerHTML = `
-                    <td><span class="cat-badge ${transacao.categoria === 'Vendas' ? 'cat-vendas' : 'cat-servicos'}">${transacao.categoria}</span></td>
-                    <td><strong>${transacao.descricao}</strong></td>
-                    <td style="color: ${transacao.categoria === 'Vendas' ? '#27ae60' : '#3498db'}; font-weight: 600;">R$ ${transacao.valor.toFixed(2)}</td>
-                    <td><i class="far fa-clock"></i> ${transacao.hora}</td>
-                    <td><span style="padding: 3px 10px; border-radius: 12px; background: ${transacao.status === 'Concluído' ? '#e8f5e9' : '#fff3e0'}; font-size: 12px;">${transacao.status}</span></td>
-                `;
-            });
-            
-            const totalFiltrado = filteredData.reduce((sum, t) => sum + t.valor, 0);
+
             const tableSummary = document.getElementById('tableSummary');
             if (tableSummary) {
                 tableSummary.innerHTML = `
-                    <span><i class="fas fa-list-ul"></i> ${filteredData.length} transações exibidas</span>
-                    <span><i class="fas fa-dollar-sign"></i> Total filtrado: R$ ${totalFiltrado.toFixed(2)}</span>
+                    <span><i class="fas fa-list-ul"></i> ${count} transações exibidas</span>
+                    <span><i class="fas fa-dollar-sign"></i> Total filtrado: R$ ${sumFiltered.toFixed(2)}</span>
                 `;
             }
         }
 
-        function filterTable() {
-            populateTable();
-        }
-
-        function exportToExcel() {
-            const wsData = [["Categoria", "Descrição", "Valor (R$)", "Hora", "Status"]];
-            transactionsData.forEach(t => {
-                wsData.push([t.categoria, t.descricao, t.valor, t.hora, t.status]);
-            });
-            const ws = XLSX.utils.aoa_to_sheet(wsData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Transacoes");
-            XLSX.writeFile(wb, `extrato_${new Date().toISOString().split('T')[0]}.xlsx`);
-        }
-
-        function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            doc.setFontSize(20);
-            doc.text("Extrato Financeiro", 14, 20);
-            
-            const tableData = transactionsData.map(t => [t.categoria, t.descricao, `R$ ${t.valor.toFixed(2)}`, t.hora]);
-            doc.autoTable({
-                head: [["Categoria", "Descrição", "Valor", "Hora"]],
-                body: tableData,
-                startY: 30
-            });
-            doc.save(`extrato_${new Date().toISOString().split('T')[0]}.pdf`);
-        }
-
-        // Inicialização
         function init() {
-            calculateTotals();
             updateStats();
             updateDonutChart();
             updateTrendChart();
-            updateGoal();
-            populateTable();
+            filterTable();
             
-            if(document.getElementById('currentDate')) {
-                document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR');
-            }
             if(document.getElementById('lastUpdate')) {
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             }
         }
         
         window.onload = init;
+
+        function toggleTheme(event) {
+            if(event) event.preventDefault();
+            
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                if(icon) icon.className = 'fas fa-moon';
+                if(text) text.textContent = 'Tema Escuro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                if(icon) icon.className = 'fas fa-sun';
+                if(text) text.textContent = 'Tema Claro';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                const icon = document.getElementById('theme-icon');
+                const text = document.getElementById('theme-text');
+                if (icon && text) {
+                    icon.className = 'fas fa-sun';
+                    text.textContent = 'Tema Claro';
+                }
+            }
+        });
     </script>
 </body>
 </html>

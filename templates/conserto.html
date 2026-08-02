@@ -4,11 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conserto de Equipamentos · TechManager</title>
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='cadastrodeconserto.css') }}">
-    
 </head>
 <body>
     <div class="menu-trigger">
@@ -21,7 +19,8 @@
             <h3>Olá, {{ 'Administrador' if session.get('cargo') == 'admin' else 'Funcionário' }}</h3>
             <p><i class="fas fa-envelope"></i> {{ session.get('usuario_logado') }}</p>
         </div>
-            <div class="menu-items">
+        
+        <div class="menu-items">
             <a class="menu-item" href="{{ url_for('menu') }}">
                 <i class="fas fa-home"></i><span>Início</span>
             </a>
@@ -66,6 +65,10 @@
                 <i class="fas fa-headset"></i><span>Suporte</span>
             </a>
             
+            <a class="menu-item" href="#" onclick="toggleTheme(event)">
+                <i class="fas fa-moon" id="theme-icon"></i><span id="theme-text">Tema Escuro</span>
+            </a>
+            
             <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
@@ -87,67 +90,85 @@
                 <h3>Nova Ordem de Serviço</h3>
             </div>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label><i class="fas fa-user"></i> Cliente</label>
-                    <input type="text" id="clienteNome" placeholder="Nome do cliente ou empresa">
+            {% if erro %}
+                <div style="background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <i class="fas fa-exclamation-circle"></i> {{ erro }}
                 </div>
-                <div class="input-group">
-                    <label><i class="fas fa-print"></i> Equipamento</label>
-                    <input type="text" id="equipamentoNome" placeholder="Ex: Impressora HP LaserJet">
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-layer-group"></i> Tipo</label>
-                    <select id="equipamentoTipo">
-                        <option value="impressora">🖨️ Impressora</option>
-                        <option value="scanner">📄 Scanner</option>
-                        <option value="notebook">💻 Notebook</option>
-                        <option value="celular">📱 Celular</option>
-                        <option value="outros">🧰 Outros</option>
-                    </select>
-                </div>
-            </div>
+            {% endif %}
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label><i class="fas fa-exclamation-triangle"></i> Defeito relatado</label>
-                    <input type="text" id="defeitoRelatado" placeholder="Descreva o problema">
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-flag"></i> Prioridade</label>
-                    <select id="prioridade">
-                        <option value="baixa">Baixa</option>
-                        <option value="media">Média</option>
-                        <option value="alta">Alta</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label><i class="fas fa-info-circle"></i> Status</label>
-                    <select id="statusServico">
-                        <option value="recebido">Recebido</option>
-                        <option value="analise">Em análise</option>
-                        <option value="conserto">Em conserto</option>
-                        <option value="aguardando">Aguardando peça</option>
-                        <option value="finalizado">Finalizado</option>
-                    </select>
-                </div>
-            </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div style="background-color: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                      <i class="fas fa-check-circle"></i> {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
 
-            <div class="form-row">
-                <div class="input-group">
-                    <label><i class="fas fa-dollar-sign"></i> Valor estimado</label>
-                    <input type="number" id="valorEstimado" placeholder="0,00" step="0.01">
+            <form action="{{ url_for('conserto') }}" method="POST">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label><i class="fas fa-user"></i> Cliente</label>
+                        <input type="text" name="cliente" required placeholder="Nome do cliente ou empresa">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-print"></i> Equipamento</label>
+                        <input type="text" name="equipamento" required placeholder="Ex: Impressora HP LaserJet">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-layer-group"></i> Tipo</label>
+                        <select name="tipo">
+                            <option value="impressora">🖨️ Impressora</option>
+                            <option value="scanner">📄 Scanner</option>
+                            <option value="notebook">💻 Notebook</option>
+                            <option value="celular">📱 Celular</option>
+                            <option value="outros">🧰 Outros</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group input-group-wide">
-                    <label><i class="fas fa-comment-dots"></i> Observações</label>
-                    <input type="text" id="observacoes" placeholder="Informações adicionais">
-                </div>
-            </div>
 
-            <div class="actions-bar">
-                <button id="btnLimparForm" class="outline"><i class="fas fa-eraser"></i> Limpar</button>
-                <button id="btnSalvarServico" class="success"><i class="fas fa-save"></i> Salvar Ordem</button>
-            </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label><i class="fas fa-exclamation-triangle"></i> Defeito relatado</label>
+                        <input type="text" name="defeito" required placeholder="Descreva o problema">
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-flag"></i> Prioridade</label>
+                        <select name="prioridade">
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-info-circle"></i> Status</label>
+                        <select name="status">
+                            <option value="recebido">Recebido</option>
+                            <option value="analise">Em análise</option>
+                            <option value="conserto">Em conserto</option>
+                            <option value="aguardando">Aguardando peça</option>
+                            <option value="finalizado">Finalizado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label><i class="fas fa-dollar-sign"></i> Valor estimado</label>
+                        <input type="number" name="valor" placeholder="0,00" step="0.01">
+                    </div>
+                    <div class="input-group input-group-wide">
+                        <label><i class="fas fa-comment-dots"></i> Observações</label>
+                        <input type="text" name="observacoes" placeholder="Informações adicionais">
+                    </div>
+                </div>
+
+                <div class="actions-bar">
+                    <button type="reset" class="outline"><i class="fas fa-eraser"></i> Limpar</button>
+                    <button type="submit" class="success"><i class="fas fa-save"></i> Salvar Ordem</button>
+                </div>
+            </form>
         </div>
 
         <div class="card grid-full">
@@ -166,8 +187,8 @@
 
             <div class="search-bar">
                 <div class="input-group">
-                    <label><i class="fas fa-search"></i> Buscar ordem</label>
-                    <input type="text" id="buscaServico" placeholder="Cliente, equipamento ou defeito...">
+                    <label><i class="fas fa-search"></i> Buscar ordem (ID, Cliente ou Equipamento)</label>
+                    <input type="text" id="buscaServico" placeholder="Digite para buscar...">
                 </div>
             </div>
 
@@ -175,6 +196,7 @@
                 <table id="tabelaServicos">
                     <thead>
                         <tr>
+                            <th>OS</th>
                             <th>Cliente</th>
                             <th>Equipamento</th>
                             <th>Tipo</th>
@@ -182,7 +204,6 @@
                             <th>Prioridade</th>
                             <th>Status</th>
                             <th>Valor</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="corpoTabela"></tbody>
@@ -191,195 +212,123 @@
         </div>
     </div>
 
+    <script id="dados-servicos" type="application/json">
+        {{ servicos | default([]) | tojson }}
+    </script>
+
     <script>
-        let servicos = [];
-        let editandoId = null;
+        const dadosElement = document.getElementById('dados-servicos').textContent;
+        let servicos = JSON.parse(dadosElement);
         let filtroAtivo = 'todos';
 
         function getTipoNome(tipo) {
-            const tipos = {
-                impressora: 'Impressora',
-                scanner: 'Scanner',
-                notebook: 'Notebook',
-                celular: 'Celular',
-                outros: 'Outros'
-            };
+            const tipos = { impressora: 'Impressora', scanner: 'Scanner', notebook: 'Notebook', celular: 'Celular', outros: 'Outros' };
             return tipos[tipo] || tipo;
         }
 
         function getPrioridadeClass(prioridade) {
-            const classes = {
-                baixa: 'badge-low',
-                media: 'badge-medium',
-                alta: 'badge-high'
-            };
+            const classes = { baixa: 'badge-low', media: 'badge-medium', alta: 'badge-high' };
             return classes[prioridade] || 'badge-low';
         }
 
         function getStatusClass(status) {
-            const classes = {
-                recebido: 'badge-received',
-                analise: 'badge-analysis',
-                conserto: 'badge-repair',
-                aguardando: 'badge-waiting',
-                finalizado: 'badge-finished'
-            };
+            const classes = { recebido: 'badge-received', analise: 'badge-analysis', conserto: 'badge-repair', aguardando: 'badge-waiting', finalizado: 'badge-finished' };
             return classes[status] || 'badge-received';
         }
 
-        async function carregarServicos() {
-            try {
-                const response = await fetch('/api/consertos');
-                if (response.ok) {
-                    servicos = await response.json();
-                    atualizarTabela();
-                }
-            } catch (error) {
-                console.error('Erro ao carregar serviços do backend:', error);
-            }
-        }
-
-        function limparFormulario() {
-            document.getElementById('clienteNome').value = '';
-            document.getElementById('equipamentoNome').value = '';
-            document.getElementById('equipamentoTipo').value = 'impressora';
-            document.getElementById('defeitoRelatado').value = '';
-            document.getElementById('prioridade').value = 'media';
-            document.getElementById('statusServico').value = 'recebido';
-            document.getElementById('valorEstimado').value = '';
-            document.getElementById('observacoes').value = '';
-            editandoId = null;
-            document.getElementById('btnSalvarServico').innerHTML = '<i class="fas fa-save"></i> Salvar Ordem';
-        }
-
-        async function salvarServico() {
-            const cliente = document.getElementById('clienteNome').value.trim();
-            const equipamento = document.getElementById('equipamentoNome').value.trim();
-            const tipo = document.getElementById('equipamentoTipo').value;
-            const defeito = document.getElementById('defeitoRelatado').value.trim();
-            const prioridade = document.getElementById('prioridade').value;
-            const status = document.getElementById('statusServico').value;
-            const valor = parseFloat(document.getElementById('valorEstimado').value) || 0;
-            const observacoes = document.getElementById('observacoes').value.trim();
-
-            if (!cliente || !equipamento || !defeito) {
-                alert('Preencha cliente, equipamento e defeito para cadastrar a ordem.');
-                return;
-            }
-
-            const dados = { cliente, equipamento, tipo, defeito, prioridade, status, valor, observacoes };
-
-            try {
-                if (editandoId) {
-                    const response = await fetch(`/api/consertos/${editandoId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dados)
-                    });
-                    if (response.ok) {
-                        limparFormulario();
-                        carregarServicos();
-                    }
-                } else {
-                    dados.id = Date.now();
-                    const response = await fetch('/api/consertos', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(dados)
-                    });
-                    if (response.ok) {
-                        limparFormulario();
-                        carregarServicos();
-                    }
-                }
-            } catch (error) {
-                console.error('Erro ao salvar serviço:', error);
-            }
-        }
-
-        function editarServico(id) {
-            const item = servicos.find(servico => servico.id === id);
-            if (!item) return;
-
-            editandoId = id;
-            document.getElementById('clienteNome').value = item.cliente;
-            document.getElementById('equipamentoNome').value = item.equipamento;
-            document.getElementById('equipamentoTipo').value = item.tipo;
-            document.getElementById('defeitoRelatado').value = item.defeito;
-            document.getElementById('prioridade').value = item.prioridade;
-            document.getElementById('statusServico').value = item.status;
-            document.getElementById('valorEstimado').value = item.valor;
-            document.getElementById('observacoes').value = item.observacoes;
-            document.getElementById('btnSalvarServico').innerHTML = '<i class="fas fa-save"></i> Atualizar Ordem';
-        }
-
-        async function removerServico(id) {
-            if (confirm('Deseja remover esta ordem de serviço?')) {
-                try {
-                    const response = await fetch(`/api/consertos/${id}`, {
-                        method: 'DELETE'
-                    });
-                    if (response.ok) {
-                        carregarServicos();
-                    }
-                } catch (error) {
-                    console.error('Erro ao remover serviço:', error);
-                }
-            }
+        function formatarStatus(status) {
+            const nomes = { recebido: 'Recebido', analise: 'Em análise', conserto: 'Em conserto', aguardando: 'Aguardando', finalizado: 'Finalizado' };
+            return nomes[status] || status;
         }
 
         function atualizarTabela() {
             const tbody = document.getElementById('corpoTabela');
-            const busca = document.getElementById('buscaServico').value.toLowerCase();
+            const busca = document.getElementById('buscaServico').value.toLowerCase().trim();
 
             let filtrados = servicos;
             if (filtroAtivo !== 'todos') {
                 filtrados = filtrados.filter(item => item.status === filtroAtivo);
             }
             if (busca) {
-                filtrados = filtrados.filter(item =>
-                    item.cliente.toLowerCase().includes(busca) ||
-                    item.equipamento.toLowerCase().includes(busca) ||
-                    item.defeito.toLowerCase().includes(busca)
-                );
+                filtrados = filtrados.filter(item => {
+                    const idFormatado = "OS" + String(item.id).padStart(4, '0');
+                    return idFormatado.toLowerCase().includes(busca) ||
+                           String(item.id).includes(busca) ||
+                           item.cliente.toLowerCase().includes(busca) ||
+                           item.equipamento.toLowerCase().includes(busca) ||
+                           item.defeito.toLowerCase().includes(busca);
+                });
             }
 
             if (filtrados.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="empty-row">Nenhuma ordem encontrada</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:32px;">Nenhuma ordem encontrada</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = filtrados.map(item => `
+            tbody.innerHTML = filtrados.map(item => {
+                const idOS = "OS" + String(item.id).padStart(4, '0');
+                return `
                 <tr>
+                    <td><strong>${idOS}</strong></td>
                     <td><strong>${item.cliente}</strong></td>
                     <td>${item.equipamento}</td>
                     <td>${getTipoNome(item.tipo)}</td>
                     <td>${item.defeito}</td>
-                    <td><span class="badge ${getPrioridadeClass(item.prioridade)}">${item.prioridade}</span></td>
-                    <td><span class="badge ${getStatusClass(item.status)}">${item.status.replace(/(^\w|\s\w)/g, m => m.toUpperCase())}</span></td>
+                    <td><span class="badge ${getPrioridadeClass(item.prioridade)}">${item.prioridade.toUpperCase()}</span></td>
+                    <td><span class="badge ${getStatusClass(item.status)}">${formatarStatus(item.status)}</span></td>
                     <td>R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editarServico(${item.id})" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete" onclick="removerServico(${item.id})" title="Excluir"><i class="fas fa-trash"></i></button>
-                    </td>
                 </tr>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarServicos();
-            document.getElementById('btnSalvarServico').addEventListener('click', salvarServico);
-            document.getElementById('btnLimparForm').addEventListener('click', limparFormulario);
-            document.getElementById('buscaServico').addEventListener('input', atualizarTabela);
+        document.getElementById('buscaServico').addEventListener('input', atualizarTabela);
 
-            document.querySelectorAll('.categoria-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.categoria-btn').forEach(item => item.classList.remove('active'));
-                    btn.classList.add('active');
-                    filtroAtivo = btn.dataset.filtro;
-                    atualizarTabela();
-                });
+        document.querySelectorAll('.categoria-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.categoria-btn').forEach(item => item.classList.remove('active'));
+                btn.classList.add('active');
+                filtroAtivo = btn.dataset.filtro;
+                atualizarTabela();
             });
+        });
+
+        atualizarTabela();
+
+        // ==================== SISTEMA DE TEMA ESCURO ====================
+        function toggleTheme(event) {
+            if(event) event.preventDefault();
+            
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                if(icon) icon.className = 'fas fa-moon';
+                if(text) text.textContent = 'Tema Escuro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                if(icon) icon.className = 'fas fa-sun';
+                if(text) text.textContent = 'Tema Claro';
+            }
+        }
+
+        // Aplica o tema imediatamente ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                const icon = document.getElementById('theme-icon');
+                const text = document.getElementById('theme-text');
+                if (icon && text) {
+                    icon.className = 'fas fa-sun';
+                    text.textContent = 'Tema Claro';
+                }
+            }
         });
     </script>
 </body>

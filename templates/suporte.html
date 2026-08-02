@@ -68,6 +68,10 @@
                 <i class="fas fa-headset"></i><span>Suporte</span>
             </a>
             
+            <a class="menu-item" href="#" onclick="toggleTheme(event)">
+                <i class="fas fa-moon" id="theme-icon"></i><span id="theme-text">Tema Escuro</span>
+            </a>
+            
             <a class="menu-item" href="{{ url_for('logout') }}" onclick="return confirm('Tem certeza que deseja sair?')">
                 <i class="fas fa-sign-out-alt"></i><span>Sair</span>
             </a>
@@ -301,6 +305,42 @@
         
         renderizarConversas();
         renderizarMensagens();
+
+        // ==================== SISTEMA DE TEMA ESCURO ====================
+        function toggleTheme(event) {
+            if(event) event.preventDefault();
+            
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+
+            if (currentTheme === 'dark') {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                if(icon) icon.className = 'fas fa-moon';
+                if(text) text.textContent = 'Tema Escuro';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                if(icon) icon.className = 'fas fa-sun';
+                if(text) text.textContent = 'Tema Claro';
+            }
+        }
+
+        // Aplica o tema imediatamente ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                const icon = document.getElementById('theme-icon');
+                const text = document.getElementById('theme-text');
+                if (icon && text) {
+                    icon.className = 'fas fa-sun';
+                    text.textContent = 'Tema Claro';
+                }
+            }
+        });
     </script>
 </body>
 </html>

@@ -558,3 +558,157 @@
             font-size: 1.2rem;
             margin-right: 4px;
         }
+
+[data-theme="dark"] .side-menu {
+    background-color: #0f172a;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+}
+[data-theme="dark"] .menu-item { color: #cbd5e1; }
+[data-theme="dark"] .menu-item:hover { background-color: #1e293b; border-left-color: #3b82f6; }
+[data-theme="dark"] .menu-divider { background: #334155; }
+[data-theme="dark"] .menu-header { background: #0b1a30; }
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .goal-container,
+[data-theme="dark"] .transactions,
+[data-theme="dark"] .header,
+[data-theme="dark"] .produto-card,
+[data-theme="dark"] .carrinho-resumo,
+[data-theme="dark"] .meta-container,
+[data-theme="dark"] .meta-values-row,
+[data-theme="dark"] .card-metrica {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f8fafc;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .financas-rapidas {
+    background-color: #1e293b;
+    border-color: #f59e0b;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .card-header h2,
+[data-theme="dark"] .card-header h3,
+[data-theme="dark"] .value-medium,
+[data-theme="dark"] .value-large,
+[data-theme="dark"] .produto-card .nome,
+[data-theme="dark"] .carrinho-item .info .nome,
+[data-theme="dark"] .meta-title {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .text-muted,
+[data-theme="dark"] .metrica-label,
+[data-theme="dark"] th {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .carrinho-items,
+[data-theme="dark"] .carrinho-item,
+[data-theme="dark"] table th {
+    background-color: #0f172a;
+    border-color: #334155;
+}
+
+[data-theme="dark"] table td { border-bottom-color: #334155; }
+
+[data-theme="dark"] tr:hover,
+[data-theme="dark"] .carrinho-item:hover,
+[data-theme="dark"] .produto-card:hover {
+    background-color: #334155;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+[data-theme="dark"] .badge-count,
+[data-theme="dark"] .categoria-badge,
+[data-theme="dark"] .badge {
+    background-color: #334155;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .carrinho-item .acoes .qtd-control button {
+    background: #334155; color: white;
+}
+
+/* =========================================
+   CORREÇÕES DARK MODE - MENU E METAS
+   ========================================= */
+
+/* 1. Conserta o botão "Início" que estava ficando branco */
+[data-theme="dark"] .menu-item.active,
+[data-theme="dark"] .menu-item[style*="background"] {
+    background-color: #1e3a8a !important; /* Fundo azul noturno */
+    color: #bfdbfe !important; /* Texto azul claro */
+}
+
+/* 2. Conserta a caixa de "Meta Atingida" para combinar com o tema escuro */
+[data-theme="dark"] .achievement-message {
+    background-color: #451a03 !important; /* Fundo escuro amadeirado/dourado */
+    border-left-color: #f59e0b !important;
+    color: #fde68a !important; /* Texto amarelo claro legível */
+}
+
+[data-theme="dark"] #achievementText {
+    color: #fde68a !important;
+}
+
+/* =========================================
+   CORREÇÃO DE TEXTOS E FONTES - DASHBOARD DARK MODE
+   ========================================= */
+
+/* Força todas as fontes principais, valores e títulos a ficarem claros */
+[data-theme="dark"] .metrica-valor,
+[data-theme="dark"] .value-large,
+[data-theme="dark"] .value-medium,
+[data-theme="dark"] .card-header h3,
+[data-theme="dark"] .meta-title,
+[data-theme="dark"] .bar-value {
+    color: #f8fafc !important;
+}
+
+/* Suaviza as labels e subtítulos menores */
+[data-theme="dark"] .metrica-label,
+[data-theme="dark"] .bar-label,
+[data-theme="dark"] .progress-label,
+[data-theme="dark"] .meta-control-group label {
+    color: #94a3b8 !important;
+}
+
+/* Ajusta as caixas de métricas internas e linhas de valores para o fundo escuro */
+[data-theme="dark"] .meta-values-row {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #334155 !important;
+}
+
+/* Campos de input de metas no modo escuro */
+[data-theme="dark"] .meta-control-group input {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+}
+
+/* Torna os textos do menu lateral totalmente brancos e claros */
+[data-theme="dark"] .menu-item,
+[data-theme="dark"] .menu-item span {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .menu-item i {
+    color: #38bdf8 !important;
+}

@@ -271,13 +271,19 @@
             color: var(--primary);
             font-size: 18px;
         }
-
-        .donut-container {
+                .donut-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center; /* Centraliza horizontalmente */
+            justify-content: center; /* Centraliza verticalmente */
+            width: 100%;
+        }
+
+        .donut-container canvas {
+            max-width: 250px !important;
+            max-height: 250px !important;
+            margin: 0 auto; /* Garante que fica no centro exato */
+            display: block;
         }
 
         canvas#donutChart {
@@ -555,3 +561,158 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        [data-theme="dark"] .side-menu {
+    background-color: #0f172a;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+}
+/* =========================================
+   TEMA ESCURO (DARK MODE) - EXTRATO COMPLETO
+   ========================================= */
+
+/* Menu Lateral */
+[data-theme="dark"] .side-menu {
+    background-color: #0f172a !important;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+}
+[data-theme="dark"] .menu-item { color: #cbd5e1 !important; }
+[data-theme="dark"] .menu-item:hover { background-color: #1e293b !important; border-left-color: #3b82f6 !important; }
+[data-theme="dark"] .menu-divider { background: #334155 !important; }
+[data-theme="dark"] .menu-header { background: #0b1a30 !important; }
+
+/* Cards, Cabeçalhos e Caixas Principais */
+[data-theme="dark"] .card,
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .goal-container,
+[data-theme="dark"] .transactions,
+[data-theme="dark"] .header,
+[data-theme="dark"] .summary-bar {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Títulos, Textos e Cores de Destaque */
+[data-theme="dark"] .header h1,
+[data-theme="dark"] .card-value,
+[data-theme="dark"] .chart-card h3 {
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+}
+
+[data-theme="dark"] .card-label,
+[data-theme="dark"] .text-muted {
+    color: #94a3b8 !important;
+}
+
+/* =========================================
+   CORREÇÃO DOS BLOCOS BRANCOS DO EXTRATO
+   ========================================= */
+
+/* Os pequenos blocos ao lado do gráfico de rosca */
+[data-theme="dark"] .stat-item {
+    background-color: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .stat-label {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .stat-value {
+    color: #38bdf8 !important;
+}
+
+/* Cabeçalho da tabela de transações */
+[data-theme="dark"] .trans-header {
+    background: #0f172a !important;
+    border-bottom: 2px solid #334155 !important;
+}
+
+/* Tabela, Linhas e Cabeçalhos */
+[data-theme="dark"] table th {
+    background-color: #0f172a !important;
+    color: #cbd5e1 !important;
+    border-bottom: 2px solid #334155 !important;
+}
+
+[data-theme="dark"] table td {
+    border-bottom-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] tr:hover {
+    background-color: #334155 !important;
+}
+
+/* Inputs, Selects e Barras de Pesquisa */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] .date-input,
+[data-theme="dark"] .filter-select {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* =========================================
+   CORREÇÃO DE FONTES E ETIQUETAS - DARK MODE
+   ========================================= */
+
+/* Suaviza as fontes principais para não ficarem com um branco tão agressivo */
+[data-theme="dark"] .card-value,
+[data-theme="dark"] .goal-percent,
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3 {
+    color: #f1f5f9 !important;
+}
+
+/* Transforma o fundo claro das categorias (Vendas) em um verde escuro elegante */
+[data-theme="dark"] .cat-vendas {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Transforma o fundo claro das categorias (Serviços) em um azul escuro elegante */
+[data-theme="dark"] .cat-servicos {
+    background-color: rgba(59, 130, 246, 0.15) !important;
+    color: #60a5fa !important;
+    border: 1px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Badges e marcadores genéricos */
+[data-theme="dark"] .cat-badge,
+[data-theme="dark"] .badge {
+    background-color: #334155 !important;
+    color: #cbd5e1 !important;
+}
+
+/* =========================================
+   CORREÇÃO DOS BADGES DE STATUS - DARK MODE
+   ========================================= */
+
+/* Status Concluído (Verde Suave) */
+[data-theme="dark"] td span, 
+[data-theme="dark"] .status-concluido {
+    background-color: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Status Pendente (Amarelo/Laranja Suave) */
+[data-theme="dark"] .status-pendente,
+[data-theme="dark"] .pendente {
+    background-color: rgba(245, 158, 11, 0.15) !important;
+    color: #fbbf24 !important;
+    border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
